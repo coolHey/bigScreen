@@ -1,0 +1,126 @@
+<template>
+  <div class="leftView">
+    <div class="title">离心机参数</div>
+    <div class="content1 content">
+      <ul>
+        <li>
+          <span>运行模式</span>
+          <span>跑的飞快</span>
+        </li>
+      </ul>
+    </div>
+    <div class="content3 content">
+      <ul>
+        <li>
+          <span>氮气</span>
+          <span>跑的飞快</span>
+        </li>
+        <li>
+          <span>运行频率</span>
+          <span>跑的飞快</span>
+        </li>
+        <li>
+          <span>运行频率</span>
+          <span>跑的飞快</span>
+        </li>
+      </ul>
+    </div>
+    <div class="content2 content">
+      <ul>
+        <li>
+          <span>输出电压</span>
+          <span>跑的飞快</span>
+        </li>
+        <li>
+          <span>输出电流</span>
+          <span>跑的飞快</span>
+        </li>
+      </ul>
+    </div>
+    <div class="content2 content">
+      <ul>
+        <li>
+          <span>温度</span>
+          <span>跑的飞快</span>
+        </li>
+        <li>
+          <span>震动值</span>
+          <span>跑的飞快</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style scoped lang="scss">
+.leftView {
+  margin-top: vh(20);
+  // height: vh(800);
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: space-between;
+  // align-items: flex-start;
+  .title {
+    width: vw(390);
+    height: vh(38);
+    background: url(../../assets/image/runningData_titleBg.png) top left
+      no-repeat;
+    background-size: 100% 100%;
+    font-size: vw(22);
+    color: #fff;
+    line-height: vh(38);
+    letter-spacing: vw(2);
+    font-style: normal;
+    padding-left: vw(40);
+  }
+  .content {
+    margin-top: vh(40);
+    padding: vh(32) vw(60) vh(42) vw(69);
+    &:nth-of-type(2) {
+      margin-top: vh(19) !important;
+    }
+    &.content3 {
+      width: vw(290);
+      height: vh(136);
+      background: url(../../assets/image/threeRow_bg.png) top left no-repeat;
+      background-size: 100% 100%;
+    }
+    &.content1 {
+      width: vw(290);
+      height: vh(28);
+      background: url(../../assets/image/oneRow_bg.png) top left no-repeat;
+      background-size: 100% 100%;
+    }
+    &.content2 {
+      width: vw(290);
+      height: vh(82);
+      background: url(../../assets/image/twoRow_bg.png) top left no-repeat;
+      background-size: 100% 100%;
+    }
+    ul {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      li {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 500;
+        font-size: vw(20);
+        color: #fff;
+        line-height: vh(28);
+        text-shadow: 0px 0px vw(8) #0094ff;
+        font-style: normal;
+      }
+    }
+  }
+}
+</style>
