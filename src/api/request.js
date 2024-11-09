@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const service = axios.create({
-  baseURL: "http://146.56.215.178:9999",
+  baseURL: process.env.NODE_ENV === "development" ? "/api" : "",
   timeout: 5000,
 });
 

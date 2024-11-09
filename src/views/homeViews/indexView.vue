@@ -12,11 +12,16 @@
 import leftView from "./left/indexView.vue";
 import rightView from "./right/indexView.vue";
 import centerView from "./center/indexVIew.vue";
+import { getHome } from "@/api/home";
 export default {
   components: {
     leftView,
     rightView,
     centerView,
+  },
+  async mounted() {
+    const homeData = await getHome();
+    console.log(homeData);
   },
 };
 </script>
