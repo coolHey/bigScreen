@@ -10,7 +10,7 @@ import china from "@/utils/china.json";
 export default {
   data() {
     return {
-      myChart: null
+      myChart: null,
     };
   },
   mounted() {
@@ -120,7 +120,7 @@ export default {
         // ],
       };
       this.myChart.setOption(options);
-      this.myChart.on("georoam", function (event) {
+      this.myChart.on("georoam", (event) => {
         if (event.zoom != null) {
           // 检查是否是缩放事件
           this.myChart.setOption({
@@ -138,7 +138,7 @@ export default {
       // })
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     // window.removeEventListener('resize', () => {
     //   this.myChart.resize()
     // })

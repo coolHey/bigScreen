@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <map-view></map-view>
-    <bottom-view></bottom-view>
+    <bottom-view :data="data"></bottom-view>
   </div>
 </template>
 
@@ -9,6 +9,12 @@
 import bottomView from "./bottomView.vue";
 import mapView from "./mapView.vue";
 export default {
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   components: {
     mapView,
     bottomView,

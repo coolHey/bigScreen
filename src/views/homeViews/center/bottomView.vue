@@ -38,19 +38,19 @@
         <div class="box">
           <div class="c3" id="c3" ref="c3"></div>
           <div class="desc">
-              <p>
-                <span class="label">未处理数：</span>
-                <span class="num">0</span>
-              </p>
-              <p>
-                <span class="label">已处理数：</span>
-                <span class="num">24</span>
-              </p>
-              <p>
-                <span class="label">异常总数：</span>
-                <span class="num">24</span>
-              </p>
-            </div>
+            <p>
+              <span class="label">未处理数：</span>
+              <span class="num">0</span>
+            </p>
+            <p>
+              <span class="label">已处理数：</span>
+              <span class="num">24</span>
+            </p>
+            <p>
+              <span class="label">异常总数：</span>
+              <span class="num">24</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -60,10 +60,21 @@
 <script>
 import * as echarts from "echarts";
 export default {
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
-      myChart: null
-    }
+      myChart: null,
+    };
+  },
+  computed: {
+    monitorErrorHandleState() {
+      return this.data.monitorErrorHandleState || {};
+    },
   },
   mounted() {
     this.initChart1();
@@ -72,6 +83,7 @@ export default {
   },
   methods: {
     initChart1() {
+      const { errorCount = {} } = this.monitorErrorHandleState;
       let option = {
         grid: {
           left: "10%",
@@ -80,18 +92,25 @@ export default {
           bottom: "30%",
         },
         xAxis: {
-          type: 'category',
+          type: "category",
           axisLine: false,
           axisLabel: {
             textStyle: {
-              color: '#2a8ab9',
+              color: "#2a8ab9",
               fontSize: 10,
-            }
+            },
           },
-          data: ['变压器重置', '变压器过载', '三融不平衡', '过电压', '欠电压', '无助欠补']
+          data: [
+            "变压器重置",
+            "变压器过载",
+            "三融不平衡",
+            "过电压",
+            "欠电压",
+            "无助欠补",
+          ],
         },
         yAxis: {
-          type: 'value',
+          type: "value",
           name: "单位（次）",
           nameTextStyle: {
             color: "#2a8ab9",
@@ -109,66 +128,75 @@ export default {
         },
         series: [
           {
-            barWidth: '18%',
+            barWidth: "18%",
             itemStyle: {
-              color: '#f4b520',
+              color: "#f4b520",
               label: {
                 textStyle: {
-                  color: '#fff'
-                }
-              }
+                  color: "#fff",
+                },
+              },
             },
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'bar',
-          }
-        ]
-      }
+            data: [
+              errorCount["transformer-reset"],
+              errorCount["transformer-overload"],
+              errorCount["imbalance-three-integrations"],
+              errorCount["over-voltage"],
+              errorCount["under-voltage"],
+              errorCount["helplessness-shortfall"],
+            ],
+            type: "bar",
+          },
+        ],
+      };
       this.myChart = echarts.init(this.$refs.c1);
       this.myChart.setOption(option);
     },
     initChart2() {
+      const { errorHandle = {} } = this.monitorErrorHandleState;
       let option = {
         tooltip: {
-          trigger: 'item'
+          trigger: "item",
         },
         legend: {
-          left: 'left'
+          left: "left",
         },
         title: {
-          left: 'center',
+          left: "center",
           textStyle: {
             fontSize: 16,
-            color: '#e7b53e',
+            color: "#e7b53e",
           },
           subtextStyle: {
-            color: '#e7b53e'
-          }
+            color: "#e7b53e",
+          },
         },
         series: [
           {
-            name: '设备实时在线率',
-            type: 'pie',
-            radius: ['60%', '90%'],
+            name: "设备实时在线率",
+            type: "pie",
+            radius: ["60%", "90%"],
             avoidLabelOverlap: false,
             // top: '10%',
             hoverAnimation: false,
             label: {
               show: false,
-              position: 'center'
+              position: "center",
             },
             emphasis: {
               label: {
                 show: false,
                 fontSize: 10,
-                fontWeight: 'bold'
-              }
+                fontWeight: "bold",
+              },
             },
             labelLine: {
-              show: false
+              show: false,
             },
             data: [
-              {   // 数据值
-                value: 78,
+              {
+                // 数据值
+                value: errorHandle?.["errorSolved"],
                 // 数据项名称
                 //该数据项是否被选中
                 selected: false,
@@ -177,151 +205,75 @@ export default {
                   normal: {
                     // 是显示标签
                     show: true,
-                    position: 'center',
+                    position: "center",
                     fontSize: 10,
                     // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
-                    formatter: '{d}%',
-                  }
-
+                    formatter: "{d}%",
+                  },
                 },
-                itemStyle: { color: '#76f89b' }
+                itemStyle: { color: "#76f89b" },
               },
               {
-                value: 22,
-                itemStyle: { color: '#f2f2f2' },
+                value: errorHandle?.["errorNoSolve"],
+                itemStyle: { color: "#f2f2f2" },
                 label: {
                   normal: {
                     show: false,
-                  }
-                }
+                  },
+                },
               },
-            ]
-          }
-        ]
-      };
-      this.myChart = echarts.init(this.$refs.c2);
-      this.myChart.setOption(option);
-    },
-    initChart2() {
-      let option = {
-        tooltip: {
-          trigger: 'item'
-        },
-        legend: {
-          left: 'left'
-        },
-        title: {
-          left: 'center',
-          textStyle: {
-            fontSize: 16,
-            color: '#e7b53e',
+            ],
           },
-          subtextStyle: {
-            color: '#e7b53e'
-          }
-        },
-        series: [
-          {
-            name: '设备实时在线率',
-            type: 'pie',
-            radius: ['60%', '90%'],
-            avoidLabelOverlap: false,
-            // top: '10%',
-            hoverAnimation: false,
-            label: {
-              show: false,
-              position: 'center'
-            },
-            emphasis: {
-              label: {
-                show: false,
-                fontSize: 10,
-                fontWeight: 'bold'
-              }
-            },
-            labelLine: {
-              show: false
-            },
-            data: [
-              {   // 数据值
-                value: 78,
-                // 数据项名称
-                //该数据项是否被选中
-                selected: false,
-                // 单个扇区的标签配置
-                label: {
-                  normal: {
-                    // 是显示标签
-                    show: true,
-                    position: 'center',
-                    fontSize: 10,
-                    // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
-                    formatter: '异常处理率\n\n{d}%',
-                    color: '#fff'
-                  }
-
-                },
-                itemStyle: { color: '#76f89b' }
-              },
-              {
-                value: 22,
-                itemStyle: { color: '#f2f2f2' },
-                label: {
-                  normal: {
-                    show: false,
-                  }
-                }
-              },
-            ]
-          }
-        ]
+        ],
       };
       this.myChart = echarts.init(this.$refs.c2);
       this.myChart.setOption(option);
     },
     initChart3() {
+      const { remoteHandle = {} } = this.monitorErrorHandleState;
       let option = {
         tooltip: {
-          trigger: 'item'
+          trigger: "item",
         },
         legend: {
-          left: 'left'
+          left: "left",
         },
         title: {
-          left: 'center',
+          left: "center",
           textStyle: {
             fontSize: 16,
-            color: '#e7b53e',
+            color: "#e7b53e",
           },
           subtextStyle: {
-            color: '#e7b53e'
-          }
+            color: "#e7b53e",
+          },
         },
         series: [
           {
-            name: '设备实时在线率',
-            type: 'pie',
-            radius: ['60%', '90%'],
+            name: "设备实时在线率",
+            type: "pie",
+            radius: ["60%", "90%"],
             avoidLabelOverlap: false,
             // top: '10%',
             hoverAnimation: false,
             label: {
               show: false,
-              position: 'center'
+              position: "center",
             },
             emphasis: {
               label: {
                 show: false,
                 fontSize: 10,
-                fontWeight: 'bold'
-              }
+                fontWeight: "bold",
+              },
             },
             labelLine: {
-              show: false
+              show: false,
             },
             data: [
-              {   // 数据值
-                value: 78,
+              {
+                // 数据值
+                value: remoteHandle?.["errorSolved"],
                 // 数据项名称
                 //该数据项是否被选中
                 selected: false,
@@ -330,27 +282,27 @@ export default {
                   normal: {
                     // 是显示标签
                     show: true,
-                    position: 'center',
+                    position: "center",
                     fontSize: 10,
                     // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
-                    formatter: '远程处理率\n\n{d}%',
-                    color: '#fff'
-                  }
+                    formatter: "远程处理率\n\n{d}%",
+                    color: "#fff",
+                  },
                 },
-                itemStyle: { color: '#e8ec6b' }
+                itemStyle: { color: "#e8ec6b" },
               },
               {
-                value: 22,
-                itemStyle: { color: '#f2f2f2' },
+                value: remoteHandle?.["errorNoSolve"],
+                itemStyle: { color: "#f2f2f2" },
                 label: {
                   normal: {
                     show: false,
-                  }
-                }
+                  },
+                },
               },
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       };
       this.myChart = echarts.init(this.$refs.c3);
       this.myChart.setOption(option);

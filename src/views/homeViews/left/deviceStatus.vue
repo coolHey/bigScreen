@@ -9,36 +9,45 @@
         <div class="unit">
           <p>正常运行</p>
           <p>
-            <span>80%</span>
-            <span>123台</span>
+            <span>{{ getRate("normal-operation") }}%</span>
+            <span>{{ getVal("normal-operation") }}台</span>
           </p>
         </div>
         <div class="progressBar">
-          <div class="progress" :style="{ width: '75%' }"></div>
+          <div
+            class="progress"
+            :style="{ width: `${getRate('normal-operation')}%` }"
+          ></div>
         </div>
       </div>
       <div class="statusItem abnormal">
         <div class="unit">
           <p>现场处理</p>
           <p>
-            <span>25%</span>
-            <span>23台</span>
+            <span>{{ getRate("onsite-handling") }}%</span>
+            <span>{{ getVal("onsite-handling") }}台</span>
           </p>
         </div>
         <div class="progressBar">
-          <div class="progress" :style="{ width: '25%' }"></div>
+          <div
+            class="progress"
+            :style="{ width: `${getRate('onsite-handling')}%` }"
+          ></div>
         </div>
       </div>
       <div class="statusItem error">
         <div class="unit">
           <p>异常警告</p>
           <p>
-            <span>45%</span>
-            <span>88台</span>
+            <span>{{ getRate("failure-occurs") }}%</span>
+            <span>{{ getVal("failure-occurs") }}台</span>
           </p>
         </div>
         <div class="progressBar">
-          <div class="progress" :style="{ width: '45%' }"></div>
+          <div
+            class="progress"
+            :style="{ width: `${getRate('failure-occurs')}%` }"
+          ></div>
         </div>
       </div>
     </div>
@@ -47,7 +56,31 @@
 
 <script>
 export default {
-  methods: {},
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  computed: {
+    monitorTotal() {
+      if (!this.data?.monitorRunState) return 0;
+      return Object.keys(this.data.monitorRunState).reduce(
+        (acc, curr) => acc + this.data.monitorRunState?.[curr],
+        0
+      );
+    },
+  },
+  methods: {
+    getRate(key) {
+      return parseInt(
+        (this.data.monitorRunState?.[key] / this.monitorTotal) * 100
+      );
+    },
+    getVal(key) {
+      return this.data.monitorRunState?.[key];
+    },
+  },
 };
 </script>
 
