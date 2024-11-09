@@ -8,24 +8,24 @@
         <div class="username item">
           <div class="icon"></div>
           <div class="inp">
-            <input type="text" />
+            <input type="text" v-model="username" />
           </div>
         </div>
         <div class="password item">
           <div class="icon"></div>
           <div class="inp">
-            <input type="password" />
+            <input type="password" v-model="password" />
           </div>
         </div>
         <div class="code">
           <div class="code_item">
             <div class="icon"></div>
             <div class="inp">
-              <input type="password" />
+              <input type="text" v-model="code" />
             </div>
           </div>
           <div class="code_img">
-            <div></div>
+            <img src="http://146.56.215.178:9999/user/code" alt="" />
           </div>
         </div>
         <div class="conform_btn" @click="goPage">登陆</div>
@@ -35,17 +35,31 @@
 </template>
 
 <script>
+import { login } from "@/api/login";
+
 export default {
   name: "loginView",
   data() {
     return {
-      a: 1,
+      username: "",
+      password: "",
+      code: "",
     };
   },
   methods: {
     goPage() {
-      this.$router.push({
-        path: "/home",
+      login({
+        username: this.username,
+        password: this.password,
+        code: this.code,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$router.push({
+            path: "/",
+          });
+        } else {
+          alert(res.message);
+        }
       });
     },
   },
@@ -127,6 +141,12 @@ export default {
           background: #ffffff;
           box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
           border-radius: 2px;
+
+          img {
+            border-radius: 2px;
+            width: 100%;
+            height: 100%;
+          }
         }
 
         .code_item {
