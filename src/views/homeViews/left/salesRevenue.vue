@@ -2,7 +2,7 @@
   <div class="container">
     <div class="title">
       <img src="../../../assets/image/title_icon.png" />
-      <span>销售额</span>
+      <span>设备实时在线率</span>
     </div>
     <div id="sales" class="chart" ref="sales"></div>
   </div>
@@ -11,7 +11,7 @@
 <script>
 import * as echarts from "echarts";
 export default {
-  data () {
+  data() {
     return {
       myChart: null
     }
@@ -21,161 +21,81 @@ export default {
   },
   methods: {
     initEchart() {
-      let yList = [32, 58, 64, 64];
-      let xData = ["10/24", "10/25", "10/26", "10/27"];
-      let dom = 300;
-      let barWidth = dom / 20;
-      let colors = [];
-      for (let i = 0; i < 4; i++) {
-        colors.push({
-          type: "linear",
-          x: 0,
-          x2: 1,
-          y: 0,
-          y2: 0,
-          colorStops: [
-            {
-              offset: 0,
-              color: "#73fcff", // 最左边
-            },
-            {
-              offset: 0.5,
-              color: "#86eef1", // 左边的右边 颜色
-            },
-            {
-              offset: 0.5,
-              color: "#5ad6d9", // 右边的左边 颜色
-            },
-            {
-              offset: 1,
-              color: "#3dc8ca",
-            },
-          ],
-        });
-      }
       let option = {
-        // backgroundColor: "#010d3a",
-        //提示框
         tooltip: {
-          trigger: "axis",
-          formatter: "{b} : {c}",
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-          },
+          trigger: 'item'
         },
-        /**区域位置*/
-        grid: {
-          left: "20%",
-          right: "10%",
-          top: "10%",
-          bottom: "35%",
+        legend: {
+          top: '5%',
+          left: 'center'
         },
-        //X轴
-        xAxis: {
-          show: true,
-          data: xData,
-          type: "category",
-          axisLine: {
-            show: false,
-            lineStyle: {
-              color: "rgba(255,255,255,1)",
-              shadowColor: "rgba(255,255,255,1)",
-              shadowOffsetX: "20",
-            },
-            symbol: ["none", "arrow"],
-            symbolOffset: [0, 25],
+        title: {
+          // text: '设备实时在线率',
+          subtext: `总台数${16}   在线率:${11}`,
+          left: 'center',
+          textStyle: {
+            fontSize: 16,
+            color: '#e7b53e',
           },
-          splitLine: {
-            show: false,
-          },
-          axisTick: {
-            show: false,
-          },
-          axisLabel: {
-            margin: 30,
-            fontSize: 15,
-          },
-        },
-        yAxis: {
-          show: true,
-          splitNumber: 4,
-          axisLine: {
-            show: false,
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              type: "dashed",
-              color: "#075858",
-            },
-          },
-          axisLabel: {
-            color: "#FFFFFF",
-            margin: 30,
-            fontSize: 15,
-          },
+          subtextStyle: {
+            color: '#e7b53e'
+          }
         },
         series: [
           {
-            // 柱状图柱体
-            type: "bar",
-            barWidth: barWidth,
-            itemStyle: {
-              normal: {
-                color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-                  {
-                    offset: 0,
-                    color: "#003D97",
-                  },
-                  {
-                    offset: 1,
-                    color: "rgba(0, 61, 151, 0)",
-                  },
-                ]),
-              },
-            },
+            name: '设备实时在线率',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            avoidLabelOverlap: false,
+            // top: '10%',
+            hoverAnimation: false,
             label: {
               show: false,
-              position: [barWidth / 2, -(barWidth + 20)],
-              color: "#ffffff",
-              fontSize: 14,
-              fontStyle: "bold",
-              align: "center",
+              position: 'center'
             },
-            data: yList,
-          },
-          {
-            // 柱状图底部
-            z: 2,
-            type: "pictorialBar",
-            data: yList,
-            symbol: "diamond",
-            symbolOffset: [0, "50%"],
-            symbolSize: [barWidth, barWidth * 0.5],
-            itemStyle: {
-              normal: {
-                color: "transparent",
+            emphasis: {
+              label: {
+                show: false,
+                fontSize: 10,
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: [
+              {   // 数据值
+                value: 78,
+                // 数据项名称
+                //该数据项是否被选中
+                selected: false,
+                // 单个扇区的标签配置
+                label: {
+                  normal: {
+                    // 是显示标签
+                    show: true,
+                    position: 'center',
+                    fontSize: 10,
+                    // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
+                    formatter: '{d}%',
+                    color: '#fff'
+                  }
+
+                },
+                itemStyle: {color:'#f7bc1d'}
               },
-            },
-          },
-          {
-            // 柱状图顶部
-            z: 3,
-            type: "pictorialBar",
-            symbolPosition: "end",
-            data: yList,
-            symbol: "diamond",
-            symbolOffset: [0, "-50%"],
-            symbolSize: [barWidth, barWidth * 0.5],
-            itemStyle: {
-              normal: {
-                borderWidth: 0,
-                color: "#2A87FF",
+              {
+                value: 22,
+                itemStyle: {color:'#f2f2f2'},
+                label: {
+                  normal: {
+                    show: false,
+                  }
+                }
               },
-            },
-          },
-        ],
+            ]
+          }
+        ]
       };
       this.myChart = echarts.init(this.$refs.sales);
       this.myChart.setOption(option);
@@ -223,8 +143,9 @@ export default {
 
   .chart {
     width: 100%;
-    height: vh(193);
+    height: vh(300);
     margin-top: vh(20);
+    overflow: hidden;
   }
 }
 </style>

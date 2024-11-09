@@ -1,31 +1,31 @@
 <template>
   <div class="leftView">
     <div class="title">离心机参数</div>
+    <div class="content3 content">
+      <ul>
+        <li>
+          <span>运行速度</span>
+          <span>跑的飞快</span>
+        </li>
+        <li>
+          <span>真空度</span>
+          <span>跑的飞快</span>
+        </li>
+        <li>
+          <span>压力</span>
+          <span>跑的飞快</span>
+        </li>
+      </ul>
+    </div>
     <div class="content1 content">
       <ul>
         <li>
-          <span>运行模式</span>
+          <span>震动/流量</span>
           <span>跑的飞快</span>
         </li>
       </ul>
     </div>
     <div class="content3 content">
-      <ul>
-        <li>
-          <span>氮气</span>
-          <span>跑的飞快</span>
-        </li>
-        <li>
-          <span>运行频率</span>
-          <span>跑的飞快</span>
-        </li>
-        <li>
-          <span>运行频率</span>
-          <span>跑的飞快</span>
-        </li>
-      </ul>
-    </div>
-    <div class="content2 content">
       <ul>
         <li>
           <span>输出电压</span>
@@ -35,9 +35,21 @@
           <span>输出电流</span>
           <span>跑的飞快</span>
         </li>
+        <li>
+          <span>腔体温度</span>
+          <span>跑的飞快</span>
+        </li>
       </ul>
     </div>
-    <div class="content2 content">
+    <div class="content1 content">
+      <ul>
+        <li>
+          <span>热源温度</span>
+          <span>跑的飞快</span>
+        </li>
+      </ul>
+    </div>
+    <!-- <div class="content2 content">
       <ul>
         <li>
           <span>温度</span>
@@ -48,7 +60,7 @@
           <span>跑的飞快</span>
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -59,11 +71,6 @@ export default {};
 <style scoped lang="scss">
 .leftView {
   margin-top: vh(20);
-  // height: vh(800);
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: space-between;
-  // align-items: flex-start;
   .title {
     width: vw(390);
     height: vh(38);
@@ -78,11 +85,8 @@ export default {};
     padding-left: vw(40);
   }
   .content {
-    margin-top: vh(40);
+    margin-top: vh(19);
     padding: vh(32) vw(60) vh(42) vw(69);
-    &:nth-of-type(2) {
-      margin-top: vh(19) !important;
-    }
     &.content3 {
       width: vw(290);
       height: vh(136);

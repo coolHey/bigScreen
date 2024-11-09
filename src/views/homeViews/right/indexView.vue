@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <fault-view></fault-view>
+    <!-- <fault-view></fault-view> -->
     <alarm-view></alarm-view>
   </div>
 </template>
@@ -19,5 +19,6 @@ export default {
 <style lang="scss" scoped>
 .container {
   width: vw(398);
+  overflow: auto;
 }
 </style>

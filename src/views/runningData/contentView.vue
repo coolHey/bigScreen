@@ -6,7 +6,7 @@
       <div class="content content1">
         <ul>
           <li>
-            <span>震动值</span>
+            <span>真空上料</span>
             <span>跑的飞快</span>
           </li>
         </ul>
@@ -14,7 +14,7 @@
       <div class="content content1">
         <ul>
           <li>
-            <span>震动值</span>
+            <span>螺旋输送</span>
             <span>跑的飞快</span>
           </li>
         </ul>
@@ -26,24 +26,25 @@
 <script>
 import * as echarts from "echarts";
 export default {
-  data () {
+  data() {
     return {
       myChart1: null,
       myChart2: null,
     }
   },
-  mounted () {
-    this.initChart()
+  mounted() {
+    this.initChart(1, '干燥机')
+    this.initChart(2, '离心机')
   },
   methods: {
-    initChart() {
+    initChart(flag, name) {
       let option = {
         tooltip: {
           trigger: "axis",
         },
         legend: {
           top: "5%",
-          data: ["Email"],
+          data: [name],
           textStyle: {
             color: "#D1DFE9",
           },
@@ -80,7 +81,7 @@ export default {
         },
         series: [
           {
-            name: "Email",
+            name,
             data: [820, 932, 901, 934, 1290, 1330, 1320],
             type: "line",
             smooth: true,
@@ -88,10 +89,13 @@ export default {
           },
         ],
       };
-      this.myChart1 = echarts.init(this.$refs.chart1);
-      this.myChart2 = echarts.init(this.$refs.chart2);
-      this.myChart1.setOption(option);
-      this.myChart2.setOption(option);
+      if (flag == 1) {
+        this.myChart1 = echarts.init(this.$refs.chart1);
+        this.myChart1.setOption(option);
+      } else {
+        this.myChart2 = echarts.init(this.$refs.chart2);
+        this.myChart2.setOption(option);
+      }
       // window.addEventListener('resize', () => {
       //   this.myChart.resize()
       // })

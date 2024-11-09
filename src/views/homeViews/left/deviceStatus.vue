@@ -2,7 +2,7 @@
   <div class="container">
     <div class="title">
       <img src="../../../assets/image/title_icon.png" />
-      <span>设备运维状态</span>
+      <span>设备运维现状</span>
     </div>
     <div class="statusInfo">
       <div class="statusItem">
@@ -19,14 +19,26 @@
       </div>
       <div class="statusItem abnormal">
         <div class="unit">
-          <p>异常警告</p>
+          <p>现场处理</p>
           <p>
-            <span>20%</span>
+            <span>25%</span>
             <span>23台</span>
           </p>
         </div>
         <div class="progressBar">
-          <div class="progress" :style="{ width: '75%' }"></div>
+          <div class="progress" :style="{ width: '25%' }"></div>
+        </div>
+      </div>
+      <div class="statusItem error">
+        <div class="unit">
+          <p>异常警告</p>
+          <p>
+            <span>45%</span>
+            <span>88台</span>
+          </p>
+        </div>
+        <div class="progressBar">
+          <div class="progress" :style="{ width: '45%' }"></div>
         </div>
       </div>
     </div>
@@ -127,6 +139,17 @@ export default {
             270deg,
             #fff000 0%,
             #ffb300 26%,
+            rgba(255, 127, 0, 0.24) 100%
+          );
+        }
+      }
+      &.error {
+        margin-top: vh(32);
+        .progressBar .progress {
+          background: linear-gradient(
+            270deg,
+            #ef8377 0%,
+            #e35a4c 26%,
             rgba(255, 127, 0, 0.24) 100%
           );
         }

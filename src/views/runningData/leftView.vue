@@ -41,7 +41,15 @@
         </li>
       </ul>
     </div>
-    <div class="content2 content">
+    <div class="content1 content">
+      <ul>
+        <li>
+          <span>震动值</span>
+          <span>跑的飞快</span>
+        </li>
+      </ul>
+    </div>
+    <!-- <div class="content2 content">
       <ul>
         <li>
           <span>温度</span>
@@ -52,7 +60,7 @@
           <span>跑的飞快</span>
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 

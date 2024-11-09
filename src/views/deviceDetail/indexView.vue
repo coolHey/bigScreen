@@ -7,7 +7,7 @@
           <input type="text" placeholder="请输入" class="inp" />
         </li>
         <li>
-          <span class="label">质保日前：</span>
+          <span class="label">质保日期：</span>
           <div class="datePick">
             <el-date-picker
               v-model="value1"
@@ -35,25 +35,49 @@
         <el-table-column
           prop="name"
           align="center"
-          label="设备出厂编号"
+          label="省"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="address"
           align="center"
-          label="设备起始日"
+          label="市"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="address"
           align="center"
-          label="质保到期日"
+          label="区/县"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="address"
           align="center"
-          label="质保期"
+          label="设备型号"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          align="center"
+          label="出厂编号"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          align="center"
+          label="出厂日期"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          align="center"
+          label="调试日期"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          align="center"
+          label="客户名称"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
@@ -62,7 +86,7 @@
           label="设备ID"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column prop="address" align="center" label="操作">
+        <el-table-column prop="address" align="center" label="操作" width="125">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
               >编辑

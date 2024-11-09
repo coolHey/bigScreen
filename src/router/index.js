@@ -3,12 +3,21 @@ import HomeView from "../views/HomeView.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
+    name: "loginView",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/login/login.vue"),
+  },
+  {
+    path: "/home",
     name: "home",
     component: HomeView,
     children: [
       {
-        path: "/",
+        path: "/home",
         name: "homeView",
         component: () => import("../views/homeViews/indexView.vue"),
       },
@@ -69,15 +78,6 @@ const routes = [
     ],
   },
   {
-    path: "/login",
-    name: "loginView",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/login/login.vue"),
-  },
-  {
     path: "/test",
     name: "testView",
     // route level code-splitting
@@ -92,5 +92,16 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
+
+
+// router.beforeEach((to, from, next) => {
+//   console.log(localStorage.getItem('token'));
+//   if (!localStorage.getItem('token')) {
+//     // router.push('/login')
+//     next('/login')
+//   } else {
+//     next(); // 允许访问
+//   }
+// });
 
 export default router;

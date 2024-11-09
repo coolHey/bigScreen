@@ -18,7 +18,7 @@
           </div>
         </li>
         <li>
-          <div class="addBtn" @click="showAdd = true">新增设备</div>
+          <div class="addBtn" @click="showAdd = true">查询</div>
         </li>
       </ul>
     </div>

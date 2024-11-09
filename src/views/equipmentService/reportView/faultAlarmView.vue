@@ -1,13 +1,13 @@
 <template>
   <div class="dataAnalysis">
-    <!-- <div class="filter">
+    <div class="filter">
       <ul>
         <li>
           <span class="label">设备编号：</span>
           <input type="text" placeholder="请输入" class="inp" />
         </li>
         <li>
-          <span class="label">质保日前：</span>
+          <span class="label">质保日期：</span>
           <div class="datePick">
             <el-date-picker
               v-model="value1"
@@ -19,11 +19,11 @@
         </li>
         <li>
           <button class="btn">查询</button>
-          <button class="btn">重置</button>
+          <button class="btn">导出</button>
         </li>
       </ul>
-      <div class="addBtn">新增设备</div>
-    </div> -->
+      <!-- <div class="addBtn">新增设备</div> -->
+    </div>
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column
@@ -42,7 +42,19 @@
         <el-table-column
           prop="address"
           align="center"
-          label="提醒时间"
+          label="故障时间"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          align="center"
+          label="故障分析报告"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          align="center"
+          label="故障解决方案"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column prop="address" align="center" label="操作">
@@ -119,6 +131,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: vh(20);
     ul {
       display: flex;
       justify-content: flex-start;

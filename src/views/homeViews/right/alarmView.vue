@@ -12,7 +12,7 @@
             alarmTime: idx === 1,
             alarmNotice: idx !== 0 && idx !== 1,
           }"
-          v-for="(item, idx) in 5"
+          v-for="(item, idx) in 20"
           :key="idx"
         >
           <div class="alarmItem">
@@ -32,7 +32,7 @@ export default {};
 
 <style lang="scss" scoped>
 .container {
-  margin-top: vh(56);
+  // margin-top: vh(56);
 
   .title {
     width: 100%;
@@ -61,14 +61,14 @@ export default {};
 
   .alarmList {
     margin-top: vh(36);
-    height: vh(402);
-    overflow-y: 100%;
+    height: vh(800);
+    // height: 100%;
+    overflow-y: auto;
     ul {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
-
       li {
         width: vw(280);
         height: vh(90);

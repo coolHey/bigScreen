@@ -149,7 +149,7 @@ export default {
 <style scoped lang="scss">
 .mapView {
   width: 100%;
-  height: vh(600);
+  height: vh(560);
 
   .mapChart {
     width: 100%;

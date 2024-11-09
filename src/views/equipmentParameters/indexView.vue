@@ -5,45 +5,24 @@
       <h2 class="title">对比图</h2>
       <div class="content">
         <div class="formData">
-          <ul v-for="item in 4" :key="item">
+          <ul v-for="(item, idx) in filterList" :key="item">
             <li>
-              <div class="label">设备出厂编号：</div>
+              <div class="label">时间范围：</div>
               <div class="datePick">
-                <el-date-picker
-                  v-model="value2"
-                  type="datetimerange"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  :default-time="defaultTime1"
-                >
+                <el-date-picker v-model="item.time" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
+                  :default-time="defaultTime1">
                 </el-date-picker>
               </div>
             </li>
             <li>
               <div class="label">设备ID：</div>
-              <input
-                type="text"
-                name=""
-                id=""
-                class="inp"
-                placeholder="请输入"
-              />
+              <input type="text" name="" id="" class="inp" placeholder="请输入" v-model="item.id" />
             </li>
             <li>
-              <div class="label">设备起始日：</div>
+              <div class="label">选择参数：</div>
               <div class="elSelect">
-                <el-select
-                  v-model="value3"
-                  multiple
-                  collapse-tags
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
+                <el-select v-model="item.parameter" multiple collapse-tags placeholder="请选择">
+                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </div>
@@ -63,8 +42,8 @@
           </ul>
         </div>
         <div class="buttons">
-          <div class="analysis">对比分析</div>
-          <div class="add">新增条件</div>
+          <div class="analysis" @click="getData">对比分析</div>
+          <div class="add" @click="addFilter">新增条件</div>
         </div>
         <div class="charts">
           <div class="myChart" id="myChart" ref="myChart"></div>
@@ -105,23 +84,67 @@ export default {
       value1: [],
       value2: [],
       value3: [],
+      filterList: [
+        {
+          time: [],
+          id: [],
+          parameter: []
+        }
+      ],
       myChart: null
     };
   },
 
   mounted() {
-    this.initChart();
+    // this.initChart();
   },
 
   methods: {
-    initChart() {
+    getData() {
+      let options = {
+        nameData: [],
+        series: []
+      }
+      this.filterList.forEach((v, idx) => {
+        options.nameData.push(idx)
+        let data = [820, 932, 901, 934, 1290, 1330, 1320]
+        let item = {
+          name: "Email",
+          data: [],
+          type: "line",
+          smooth: true,
+          symbol: "none",
+        }
+        data.forEach(k => {
+          k = k + idx
+          item.data.push(k)
+        })
+        options.series.push(item)
+      })
+      console.log(options);
+      this.myChart = null
+      this.initChart(options)
+    },
+
+    addFilter() {
+      this.filterList.push({
+        time: [],
+        id: [],
+        parameter: []
+      })
+    },
+
+    initChart(opt) {
+      console.log(opt);
+
       let option = {
         tooltip: {
+          show: true,
           trigger: "axis",
         },
         legend: {
           top: "5%",
-          data: ["Email"],
+          data: opt?.nameData || [],
           textStyle: {
             color: "#D1DFE9",
           },
@@ -156,16 +179,19 @@ export default {
             },
           },
         },
-        series: [
-          {
-            name: "Email",
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: "line",
-            smooth: true,
-            symbol: "none",
-          },
-        ],
+        series: opt.series
+        // series: [
+        //   {
+        //     name: "Email",
+        //     data: opt?.data || [],
+        //     type: "line",
+        //     smooth: true,
+        //     symbol: "none",
+        //   },
+        // ],
       };
+      console.log(option);
+
       this.myChart = echarts.init(this.$refs.myChart);
       this.myChart.setOption(option);
       // window.addEventListener('resize', () => {
@@ -189,26 +215,30 @@ export default {
   align-items: center;
   width: vw(1920);
   height: vh(995);
+
   .bracketsLeft,
   .bracketsRight {
     width: vw(258);
     height: vh(438);
+
     &.bracketsLeft {
       background: url(../../assets/image/brackets_left.png) top left no-repeat;
       background-size: 100% 100%;
     }
+
     &.bracketsRight {
       background: url(../../assets/image/brackets_right.png) top left no-repeat;
       background-size: 100% 100%;
     }
   }
+
   .main {
-    background: url(../../assets/image/equipmentParameters_bg.png) top left
-      no-repeat;
+    background: url(../../assets/image/equipmentParameters_bg.png) top left no-repeat;
     background-size: 100% 100%;
     width: vw(1390);
     height: vh(840);
     padding: 0 vw(40);
+
     .title {
       font-size: vw(22);
       color: #fff;
@@ -217,10 +247,12 @@ export default {
       text-shadow: 0px vh(2) vw(4) rgba(0, 42, 81, 0.64);
       margin-top: vh(10);
     }
+
     .content {
       .formData {
         height: vh(226);
         overflow-y: auto;
+
         ul {
           display: flex;
           flex-wrap: wrap;
@@ -238,18 +270,20 @@ export default {
               text-transform: none;
               margin-bottom: vh(8);
             }
+
             .elSelect {
               width: vw(378);
               height: vh(40);
+
               :deep(.el-select) {
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
-                  no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;
                 padding: 0;
+
                 .el-select__wrapper {
                   width: 100%;
                   height: 100%;
@@ -263,24 +297,25 @@ export default {
             .datePick {
               width: vw(378);
               height: vh(40);
+
               :deep(.el-date-editor) {
                 background: transparent;
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
-                  no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;
                 padding: 0;
+
                 .el-icon {
                   display: none;
                 }
+
                 .el-input__wrapper {
                   width: 100%;
                   height: 100%;
-                  background: url(../../assets/image/inp_bg.png) top left
-                    no-repeat;
+                  background: url(../../assets/image/inp_bg.png) top left no-repeat;
                   background-size: 100% 100%;
                   border: none;
                   box-shadow: none;
@@ -302,9 +337,9 @@ export default {
               text-align: left;
               font-style: normal;
             }
+
             &.delete {
-              background: url(../../assets/image/delete_bg.png) top left
-                no-repeat;
+              background: url(../../assets/image/delete_bg.png) top left no-repeat;
               background-size: 100% 100%;
               width: vw(40);
               height: vh(40);
@@ -313,11 +348,13 @@ export default {
           }
         }
       }
+
       .buttons {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin: vh(29) 0 vh(39) 0;
+
         .analysis,
         .add {
           width: vw(170);
@@ -330,21 +367,25 @@ export default {
           text-transform: none;
           text-align: center;
           cursor: pointer;
+
           &.analysis {
             background: url(../../assets/image/add_left.png) top left no-repeat;
             background-size: 100% 100%;
           }
+
           &.add {
             background: url(../../assets/image/add_bg.png) top left no-repeat;
             background-size: 100% 100%;
           }
         }
       }
+
       .charts {
         width: vw(1310);
         height: vh(456);
         background: url(../../assets/image/charts_bg.png) top left no-repeat;
         background-size: 100% 100%;
+
         .myChart {
           width: 100%;
           height: 100%;

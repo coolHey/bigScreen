@@ -2,7 +2,7 @@
   <div class="container">
     <status-view></status-view>
     <sales-view></sales-view>
-    <annual-goals-view></annual-goals-view>
+    <!-- <annual-goals-view></annual-goals-view> -->
   </div>
 </template>
 
@@ -18,5 +18,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   width: vw(398);
+  height: 100%;
+  flex: 1;
 }
 </style>
