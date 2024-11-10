@@ -8,17 +8,17 @@
       <ul>
         <li
           :class="{
-            alarmFault: idx === 0,
-            alarmTime: idx === 1,
-            alarmNotice: idx !== 0 && idx !== 1,
+            alarmFault: item.status === 4,
+            // alarmTime: idx === 1,
+            alarmNotice: item.status === 3,
           }"
-          v-for="(item, idx) in 20"
+          v-for="(item, idx) in monitorWarnState"
           :key="idx"
         >
           <div class="alarmItem">
-            <p>LSD-200671</p>
-            <p>发生故障，请及时处理</p>
-            <p>2023.10.30 12:00:00</p>
+            <p>{{ item.monitorId }}</p>
+            <p>{{ item.msg.msg }}</p>
+            <p>{{ item.errorTime }}</p>
           </div>
         </li>
       </ul>
@@ -27,7 +27,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  computed: {
+    monitorWarnState() {
+      return this.data?.monitorWarnState || [];
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

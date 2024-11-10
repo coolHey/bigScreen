@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="main">
-      <left-view></left-view>
-      <center-view></center-view>
-      <right-view></right-view>
+      <left-view :data="homeData"></left-view>
+      <center-view :data="homeData"></center-view>
+      <right-view :data="homeData"></right-view>
     </div>
   </div>
 </template>
@@ -19,9 +19,18 @@ export default {
     rightView,
     centerView,
   },
+  data() {
+    return {
+      homeData: {},
+    };
+  },
   async mounted() {
-    const homeData = await getHome();
-    console.log(homeData);
+    const res = await getHome();
+    if (res.code == 200) {
+      this.homeData = res.data;
+    } else {
+      alert(res.message);
+    }
   },
 };
 </script>
