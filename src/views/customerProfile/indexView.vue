@@ -3,90 +3,97 @@
     <div class="filter">
       <ul>
         <li>
-          <span class="label">设备ID：</span>
-          <input type="text" placeholder="请输入" class="inp" />
+          <span class="label">客户ID：</span>
+          <input
+            type="text"
+            placeholder="请输入"
+            class="inp"
+            v-model="form.id"
+          />
         </li>
         <li>
-          <button class="btn">查询</button>
-          <button class="btn">重置</button>
+          <button class="btn" @click="doSearch">查询</button>
+          <button class="btn" @click="form.monitorId = undefined">重置</button>
         </li>
       </ul>
-      <div class="addBtn">一键导出</div>
+      <div class="addBtn" @click="exportData">一键导出</div>
     </div>
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column
-          prop="date"
+          type="index"
           align="center"
           label="序号"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="name"
+          prop="id"
           align="center"
           label="客户编号"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="clientName"
           align="center"
           show-overflow-tooltip
           label="客户名称"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="clientAddress"
           align="center"
           show-overflow-tooltip
           label="地址"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="contactPerson"
           align="center"
           show-overflow-tooltip
           label="联系人"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="contactPhone"
           align="center"
           show-overflow-tooltip
           label="联系电话"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="salesClerk"
           align="center"
           label="销售员"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="saleTime"
           align="center"
           show-overflow-tooltip
           label="时间"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="afterSales"
           align="center"
           label="售后服务记录售后人员"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="afterSalesCount"
           align="center"
           show-overflow-tooltip
           label="次数"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="result"
           align="center"
           show-overflow-tooltip
           label="结果"
         ></el-table-column>
-        <el-table-column prop="address" align="center" label="操作">
+        <el-table-column align="center" label="操作">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
               >编辑
             </el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="deleteItem(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -95,7 +102,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :total="1000"
+        :total="total"
+        :current-page="pagination.pn"
+        :page-size="pagination.size"
         background
         layout="total, prev, pager, next"
       >
@@ -105,47 +114,72 @@
 </template>
 
 <script>
+import { getArchivePageData, updateCustomer } from "@/api/customerProfile";
+import { download } from "@/utils/download";
+import { ElMessage } from "element-plus";
+import QueryString from "qs";
 export default {
   data() {
     return {
-      value1: "",
-      region: "",
-      tableData: [
-        {
-          date: "0001",
-          name: "王麻子",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "0002",
-          name: "王麻子",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "0003",
-          name: "王麻子",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "0004",
-          name: "王麻子",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      tableData: [],
+      form: {
+        id: "",
+      },
+      pagination: {
+        pn: 1,
+        size: 10,
+      },
+      total: 0,
     };
   },
+  mounted() {
+    this.getData();
+  },
   methods: {
-    onSubmit() {
-      console.log("submit!");
+    async getData() {
+      const res = await getArchivePageData({
+        ...this.pagination,
+        ...this.form,
+      });
+      if (res.code === 200) {
+        this.tableData = res.data.records;
+        this.total = res.data.total;
+      }
+    },
+    doSearch() {
+      this.getData();
+    },
+    exportData() {
+      download(
+        "http://146.56.215.178:9999/msg/maintainExport?" +
+          QueryString.stringify({
+            ids: JSON.stringify(this.tableData.map((item) => item.id)),
+          })
+      );
+    },
+    async handleClick(row) {
+      // const res = await updateCustomer(row.id);
+      // if (res.code === 200) {
+      //   ElMessage.success("提醒成功");
+      // } else {
+      //   ElMessage.error(res.message);
+      // }
+    },
+    async deleteItem(row) {
+      // const res = await postNotice(row.id);
+      // if (res.code === 200) {
+      //   ElMessage.success("删除成功");
+      // } else {
+      //   ElMessage.error(res.message);
+      // }
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.size = val;
+      this.getData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    handleClick(row) {
-      console.log(row);
+      this.pagination.pn = val;
+      this.getData();
     },
   },
 };

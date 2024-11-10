@@ -16,7 +16,7 @@
           <div class="datePick">
             <el-date-picker
               format="YYYY-MM-DD HH:mm:ss"
-              value-format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY/MM/DD"
               v-model="form.soldTime"
               type="datetime"
               placeholder="选择日期时间"
@@ -92,8 +92,8 @@ export default {
     return {
       tableData: [],
       form: {
-        monitorId: "",
-        soldTime: "",
+        monitorId: undefined,
+        soldTime: undefined,
       },
       pagination: {
         pn: 1,
@@ -121,15 +121,15 @@ export default {
     },
     exportData() {
       download(
-        "http://146.56.215.178:9999/msg/soldExport?" +
+        "http://146.56.215.178:9999/msg/errorExport?" +
           QueryString.stringify({
             ids: JSON.stringify(this.tableData.map((item) => item.id)),
           })
       );
     },
-    handleClick(row) {
-      console.log(row);
-    },
+    // async handleClick(row) {
+
+    // },
     handleSizeChange(val) {
       this.pagination.size = val;
       this.getData();
