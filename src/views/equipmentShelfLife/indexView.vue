@@ -19,7 +19,7 @@
         </li>
         <li>
           <button class="btn">查询</button>
-          <button class="btn">重置</button>
+          <button class="btn" @click="handleReset">重置</button>
         </li>
       </ul>
       <div class="addBtn" @click="showAdd = true">新增设备</div>
@@ -27,47 +27,47 @@
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column
-          prop="date"
+          type="index"
           align="center"
           label="序号"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="name"
+          prop="factoryId"
           align="center"
           label="设备出厂编号"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="factoryDate"
           align="center"
           label="设备起始日"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="warrantyDate"
           align="center"
           label="质保到期日"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="warrantySpan"
           align="center"
           label="质保期"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="id"
           align="center"
           label="设备ID"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column prop="address" align="center" label="操作">
           <template #default="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small"
+            <el-button @click="handleEdit(scope.row)" type="text" size="small"
               >编辑
             </el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,6 +86,7 @@
     <!-- </div> -->
     <add-equipment-view
       @doSubmit="closeDialog(idx)"
+      :updateData="updateData"
       v-if="showAdd"
     ></add-equipment-view>
   </div>
@@ -93,7 +94,7 @@
 
 <script>
 import addEquipmentView from "./addEquipment.vue";
-
+import { getListData, deleteShelfLife } from '@/api/shelfLife'
 export default {
   components: {
     addEquipmentView,
@@ -103,31 +104,52 @@ export default {
       value1: "",
       region: "",
       showAdd: false,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      tableData: [],
+      filterData: {
+        pn: 1,
+        size: 10
+      },
+      updateData: {}
     };
   },
+  mounted () {
+    this.getList()
+  },
   methods: {
+    // 获取数据
+    getList() {
+      getListData(this.filterData).then(res => {
+        if (res.code == 200) {
+          this.tableData = res.data.records
+        }
+      })
+    },
+
+    // 删除设备
+    handleDelete(row) {
+      alert('功能暂未开放')
+      return
+      deleteShelfLife({ id: row.id }).then(res => {
+        console.log(res);
+        if (res.code == 200) {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          this.getList()
+        } else {
+          this.$message({
+            message: '删除失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    
+    // 重置搜索条件
+    handleReset() {
+
+    },
     onSubmit() {
       console.log("submit!");
     },
@@ -137,8 +159,9 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    handleClick(row) {
-      console.log(row);
+    handleEdit(row) {
+      this.updateData = row
+      this.showAdd = true
     },
     closeDialog(idx) {
       console.log(idx, 111);

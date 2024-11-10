@@ -6,62 +6,92 @@
         <ul>
           <li>
             <div class="label">设备出厂编号：</div>
-            <input type="text" name="" id="" class="inp" placeholder="请输入" />
+            <input type="text" v-model="submitData.factoryId" name="" id="" class="inp" placeholder="请输入" />
           </li>
           <li>
             <div class="label">设备ID：</div>
-            <input type="text" name="" id="" class="inp" placeholder="请输入" />
+            <input type="text" name="" v-model="submitData.id" id="" class="inp" placeholder="请输入" />
           </li>
           <li>
             <div class="label">设备起始日：</div>
             <div class="datePick">
-              <el-date-picker
-                v-model="value2"
-                type="datetimerange"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :default-time="defaultTime1"
-              >
+              <el-date-picker v-model="submitData.factoryDate" type="datetimerange" start-placeholder="开始日期"
+                end-placeholder="结束日期" :default-time="defaultTime1">
               </el-date-picker>
             </div>
           </li>
           <li>
             <div class="label">设备到期日：</div>
             <div class="datePick">
-              <el-date-picker
-                v-model="value1"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
+              <el-date-picker v-model="submitData.warrantyDate" type="datetime" placeholder="选择日期时间">
               </el-date-picker>
             </div>
           </li>
           <li>
             <div class="label">质保期：</div>
-            <input type="text" name="" id="" class="inp" placeholder="请输入" />
+            <input type="text" v-model="submitData.warrantySpan" name="" id="" class="inp" placeholder="请输入" />
           </li>
         </ul>
       </div>
       <div class="btns">
         <div class="btn" @click="doSubmit(1)">取消</div>
-        <div class="btn" @click="doSubmit(1)">完成</div>
+        <div class="btn" @click="doSubmit(2)">完成</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { upDateShelfLife } from '@/api/shelfLife';
 export default {
+  props: ['updateData'],
   data() {
     return {
-      value1: "",
-      value2: "",
+      submitData: {
+        id: '', // 设备id
+        factoryId: '', // 设备出厂编号
+        factoryDate: '', // 设备起始日
+        warrantyDate: '', // 质保到期日
+        warrantySpan: '', // 质保期
+      }
     };
+  },
+  mounted() {
+    console.log(this.updateData);
+    this.submitData = Object.assign(this.submitData, this.updateData)
   },
   methods: {
     doSubmit(idx) {
-      this.$emit("doSubmit", idx);
+      if (idx == 1) {
+        this.$emit("doSubmit", idx);
+        this.reset()
+        return
+      }
+      upDateShelfLife(this.submitData).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          });
+          this.reset()
+          this.$emit("doSubmit", idx);
+        } else {
+          this.$message({
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
     },
+    reset() {
+      this.submitData = {
+        id: '', // 设备id
+        factoryId: '', // 设备出厂编号
+        factoryDate: '', // 设备起始日
+        warrantyDate: '', // 质保到期日
+        warrantySpan: '', // 质保期
+      }
+    }
   },
 };
 </script>
@@ -107,6 +137,7 @@ export default {
 
         li {
           margin-bottom: vh(24);
+
           .label {
             font-size: vw(18);
             color: #fff;
@@ -120,6 +151,7 @@ export default {
           .datePick {
             width: vw(410);
             height: vh(40);
+
             :deep(.el-date-editor) {
               background: transparent;
               width: 100%;
@@ -129,14 +161,15 @@ export default {
               border: none;
               box-shadow: none;
               padding: 0;
+
               .el-icon {
                 display: none;
               }
+
               .el-input__wrapper {
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
-                  no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;
@@ -161,10 +194,12 @@ export default {
         }
       }
     }
+
     .btns {
       display: flex;
       justify-content: center;
       align-items: center;
+
       .btn {
         width: vw(168);
         height: vh(40);
@@ -175,10 +210,12 @@ export default {
         color: #fff;
         letter-spacing: vw(1);
         font-style: normal;
+
         &:nth-of-type(1) {
           background: url(../../assets/image/cancel_bg.png) top left no-repeat;
           margin-right: vw(122);
         }
+
         &:nth-of-type(2) {
           background: url(../../assets/image/add_bg.png) top left no-repeat;
         }

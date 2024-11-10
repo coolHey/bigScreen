@@ -13,9 +13,9 @@ const app = createApp(App);
 app.use(ElementPlus, { size: "small", zIndex: 3000, locale: zhCn });
 app.use(store).use(router).mount("#app");
 app.config.globalProperties.$echarts = echarts;
-if (!localStorage.getItem('token')) {
-  router.push('/login')
-}
+// if (!localStorage.getItem('token')) {
+//   router.push('/login')
+// }
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }

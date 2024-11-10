@@ -8,7 +8,7 @@
             <div class="label">省：</div>
             <div class="elSelect small">
               <el-select
-                v-model="value3"
+                v-model="submitData.province"
                 multiple
                 collapse-tags
                 placeholder="请选择"
@@ -27,7 +27,7 @@
             <div class="label">市</div>
             <div class="elSelect small">
               <el-select
-                v-model="value3"
+                v-model="submitData.city"
                 multiple
                 collapse-tags
                 placeholder="请选择"
@@ -46,7 +46,7 @@
             <div class="label">区/县</div>
             <div class="elSelect small">
               <el-select
-                v-model="value3"
+                v-model="submitData.district"
                 multiple
                 collapse-tags
                 placeholder="请选择"
@@ -65,7 +65,7 @@
             <div class="label">设备型号：</div>
             <div class="elSelect">
               <el-select
-                v-model="value3"
+                v-model="submitData.type"
                 multiple
                 collapse-tags
                 placeholder="请选择"
@@ -84,7 +84,7 @@
             <div class="label">出厂编号：</div>
             <div class="elSelect">
               <el-select
-                v-model="value3"
+                v-model="submitData.factoryId"
                 multiple
                 collapse-tags
                 placeholder="请选择"
@@ -103,7 +103,7 @@
             <div class="label">出厂日期</div>
             <div class="datePick">
               <el-date-picker
-                v-model="value1"
+                v-model="submitData.factoryDate"
                 type="datetime"
                 placeholder="选择日期时间"
               >
@@ -122,7 +122,7 @@
             <div class="label">调试日期：</div>
             <div class="datePick">
               <el-date-picker
-                v-model="value1"
+                v-model="submitData.debugDate"
                 type="datetime"
                 placeholder="选择日期时间"
               >
@@ -131,11 +131,11 @@
           </li>
           <li>
             <div class="label">客户名称：</div>
-            <input type="text" name="" id="" class="inp" placeholder="请输入" />
+            <input type="text" v-model="submitData.client" name="" id="" class="inp" placeholder="请输入" />
           </li>
           <li>
             <div class="label">设备ID：</div>
-            <input type="text" name="" id="" class="inp" placeholder="请输入" />
+            <input type="text" v-model="submitData.id" name="" id="" class="inp" placeholder="请输入" />
           </li>
         </ul>
       </div>
@@ -154,6 +154,19 @@ export default {
       value1: "",
       value2: "",
       value3: "",
+      submitData: {
+        id: '', // 设备id
+        client: '', //客户名称
+        type: '', //设备型号
+        province: '', //省
+        city: '', //市
+        district: '', //区
+        factoryId: '', //出厂编号
+        factoryDate: '', //出厂日期
+        debugDate: '', //调试日期
+        warrantyDate: '', //设备到期日
+        warrantySpan: '', //质保期
+      }
     };
   },
   methods: {
