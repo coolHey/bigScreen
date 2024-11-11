@@ -1,5 +1,10 @@
 <template>
-  <div class="menuView" :style="{background: isCollapse ? 'transparent' : 'rgba(21, 36, 65, 0.64)'}">
+  <div
+    class="menuView"
+    :style="{
+      background: isCollapse ? 'transparent' : 'rgba(21, 36, 65, 0.64)',
+    }"
+  >
     <div class="collapse" @click="isCollapse = !isCollapse">
       <el-icon v-show="isCollapse">
         <Expand />
@@ -8,8 +13,15 @@
         <Fold />
       </el-icon>
     </div>
-    <el-menu default-active="1" :popper-offset="100" class="el-menu-vertical-demo" @open="handleOpen"
-      @close="handleClose" :collapse="isCollapse" v-if="!isCollapse">
+    <el-menu
+      default-active="1"
+      :popper-offset="100"
+      class="el-menu-vertical-demo"
+      @open="handleOpen"
+      @close="handleClose"
+      :collapse="isCollapse"
+      v-if="!isCollapse"
+    >
       <template v-for="(item, index) in menuList" :key="index">
         <el-sub-menu :index="item.value" v-if="item.children.length">
           <template #title>
@@ -18,8 +30,13 @@
             </el-icon>
             <span>{{ item.label }}</span>
           </template>
-          <el-menu-item v-for="(e, i) in item.children" :key="e.id" :index="e.value" @click="handlePath(e)">{{ e.label
-            }}</el-menu-item>
+          <el-menu-item
+            v-for="e in item.children"
+            :key="e.id"
+            :index="e.value"
+            @click="handlePath(e)"
+            >{{ e.label }}</el-menu-item
+          >
         </el-sub-menu>
         <el-menu-item :index="item.value" v-else @click="handlePath(item)">
           <el-icon>
@@ -95,19 +112,19 @@ export default {
         {
           label: "登陆日志",
           value: 5,
-          path: "/systemManage",
+          path: "/systemManage?activeMenu=1",
           children: [],
         },
         {
           label: "消息通知",
           value: 6,
-          path: "/systemManage",
+          path: "/systemManage?activeMenu=0",
           children: [],
         },
         {
           label: "修改密码",
           value: 7,
-          path: "/systemManage",
+          path: "/systemManage?activeMenu=2",
           children: [],
         },
         // {
@@ -133,16 +150,14 @@ export default {
   },
   methods: {
     handlePath(item) {
-      this.$router.push({
-        path: item.path
-      })
+      this.$router.push(item.path);
     },
     handleOpen(key, keyPath) {
-      console.log(key, keyPath)
+      console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath)
-    }
+      console.log(key, keyPath);
+    },
   },
 };
 </script>
@@ -180,7 +195,6 @@ export default {
       background: transparent;
     }
 
-
     // .el-menu-item {
     //   padding-left: vw(80) !important;
     // }
@@ -189,13 +203,12 @@ export default {
       background: transparent;
     }
 
-
     .el-menu-item-group__title,
     .el-menu-item,
     .el-sub-menu__title {
       font-weight: 400;
       font-size: vw(20);
-      color: #FFFFFF;
+      color: #ffffff;
       line-height: vh(28);
       // height: vh(80);
       text-align: left;
@@ -204,7 +217,6 @@ export default {
         color: #409eff !important;
       }
     }
-
 
     // span {
     //   font-weight: 400;

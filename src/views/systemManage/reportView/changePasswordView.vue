@@ -4,27 +4,65 @@
       <ul>
         <li>
           <span class="label">旧密码：</span>
-          <input type="text" class="inp" />
+          <input type="text" class="inp" v-model="oldPassword" />
         </li>
         <li>
           <span class="label">新密码：</span>
-          <input type="text" class="inp" />
+          <input type="text" class="inp" v-model="newPassword" />
         </li>
         <li>
           <span class="label">确认新密码：</span>
-          <input type="text" class="inp" />
+          <input type="text" class="inp" v-model="confirmNewPassword" />
         </li>
       </ul>
+    </div>
+    <div class="btns">
+      <div class="btn" @click="doSubmit()">完成</div>
     </div>
   </div>
 </template>
 
 <script>
+import { changePassword } from "@/api/login";
+
 export default {
   data() {
-    return {};
+    return {
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    };
   },
-  methods: {},
+  methods: {
+    doSubmit() {
+      if (!this.oldPassword) {
+        this.$message({
+          message: "请输入旧密码",
+          type: "warning",
+        });
+        return;
+      }
+      if (!this.newPassword) {
+        this.$message({
+          message: "请输入新密码",
+          type: "warning",
+        });
+        return;
+      }
+      if (this.newPassword !== this.confirmNewPassword) {
+        this.$message({
+          message: "两次密码不一致",
+          type: "warning",
+        });
+        return;
+      }
+      changePassword({
+        username: localStorage.getItem("username"),
+        oldPassword: this.oldPassword,
+        newPassword: this.newPassword,
+      });
+    },
+  },
 };
 </script>
 
@@ -73,6 +111,32 @@ export default {
           font-style: normal;
           padding: vh(8) vh(12);
         }
+      }
+    }
+  }
+  .btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .btn {
+      width: vw(168);
+      height: vh(40);
+      background-size: 100% 100%;
+      text-align: center;
+      line-height: vh(40);
+      font-size: 18px;
+      color: #fff;
+      letter-spacing: vw(1);
+      font-style: normal;
+
+      &:nth-of-type(1) {
+        background: url(../../../assets/image/cancel_bg.png) top left no-repeat;
+        margin-right: vw(122);
+      }
+
+      &:nth-of-type(2) {
+        background: url(../../../assets/image/add_bg.png) top left no-repeat;
       }
     }
   }

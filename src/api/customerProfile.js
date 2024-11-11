@@ -11,3 +11,8 @@ export const getArchivePageData = (params) => {
 export const updateCustomer = (data) => {
   return request.post("/client/archiveUpdate", data);
 };
+
+// 8.3删除设备
+export const deleteCustomer = (id) => {
+  return request.post("/client/archiveDelete/" + id);
+};

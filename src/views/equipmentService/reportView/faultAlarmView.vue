@@ -16,7 +16,7 @@
           <div class="datePick">
             <el-date-picker
               format="YYYY-MM-DD HH:mm:ss"
-              value-format="YYYY/MM/DD"
+              value-format="YYYY-MM-DD HH:mm:ss"
               v-model="form.errorTime"
               type="datetime"
               placeholder="选择日期时间"
@@ -25,8 +25,8 @@
           </div>
         </li>
         <li>
-          <button class="btn">查询</button>
-          <button class="btn">导出</button>
+          <button class="btn" @click="doSearch">查询</button>
+          <button class="btn" @click="exportData">导出</button>
         </li>
       </ul>
       <!-- <div class="addBtn">新增设备</div> -->

@@ -16,7 +16,7 @@
           <div class="datePick">
             <el-date-picker
               format="YYYY-MM-DD HH:mm:ss"
-              value-format="YYYY/MM/DD"
+              value-format="YYYY-MM-DD HH:mm:ss"
               v-model="form.soldTime"
               type="datetime"
               placeholder="选择日期时间"

@@ -111,14 +111,21 @@
       </el-pagination>
     </div>
   </div>
+  <EditCustomer
+    v-if="showEdit"
+    @doSubmit="showEdit = false"
+    :updateData="editData"
+  />
 </template>
 
 <script>
-import { getArchivePageData, updateCustomer } from "@/api/customerProfile";
+import { deleteCustomer, getArchivePageData } from "@/api/customerProfile";
 import { download } from "@/utils/download";
 import { ElMessage } from "element-plus";
 import QueryString from "qs";
+import EditCustomer from "./editCustomer.vue";
 export default {
+  components: { EditCustomer },
   data() {
     return {
       tableData: [],
@@ -130,6 +137,8 @@ export default {
         size: 10,
       },
       total: 0,
+      editData: {},
+      showEdit: false,
     };
   },
   mounted() {
@@ -151,27 +160,27 @@ export default {
     },
     exportData() {
       download(
-        "http://146.56.215.178:9999/msg/maintainExport?" +
+        "http://146.56.215.178:9999/client/archiveExport?" +
           QueryString.stringify({
             ids: JSON.stringify(this.tableData.map((item) => item.id)),
           })
       );
     },
     async handleClick(row) {
-      // const res = await updateCustomer(row.id);
-      // if (res.code === 200) {
-      //   ElMessage.success("提醒成功");
-      // } else {
-      //   ElMessage.error(res.message);
-      // }
+      this.editData = {
+        ...row,
+      };
+      this.showEdit = true;
+      this.getData();
     },
     async deleteItem(row) {
-      // const res = await postNotice(row.id);
-      // if (res.code === 200) {
-      //   ElMessage.success("删除成功");
-      // } else {
-      //   ElMessage.error(res.message);
-      // }
+      const res = await deleteCustomer(row.id);
+      if (res.code === 200) {
+        ElMessage.success("删除成功");
+      } else {
+        ElMessage.error(res.message);
+      }
+      this.getData();
     },
     handleSizeChange(val) {
       this.pagination.size = val;

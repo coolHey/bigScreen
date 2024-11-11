@@ -4,13 +4,20 @@
       <ul>
         <li>
           <span class="label">用户：</span>
-          <input type="text" placeholder="请输入" class="inp" />
+          <input
+            type="text"
+            placeholder="请输入"
+            class="inp"
+            v-model="form.username"
+          />
         </li>
         <li>
           <span class="label">登陆时间：</span>
           <div class="datePick">
             <el-date-picker
-              v-model="value1"
+              format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              v-model="form.loginTime"
               type="datetime"
               placeholder="选择日期时间"
             >
@@ -18,8 +25,8 @@
           </div>
         </li>
         <li>
-          <button class="btn">查询</button>
-          <button class="btn">重置</button>
+          <button class="btn" @click="doSearch">查询</button>
+          <button class="btn" @click="reset">重置</button>
         </li>
       </ul>
       <!-- <div class="addBtn">新增设备</div> -->
@@ -27,56 +34,47 @@
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column
-          prop="date"
+          type="index"
           align="center"
           label="序号"
+          width="100"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="name"
+          prop="username"
           align="center"
-          label="设备出厂编号"
+          label="用户名"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="loginTime"
           align="center"
-          label="设备起始日"
+          label="登录时间"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="count"
           align="center"
-          label="质保到期日"
+          label="登录次数"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column
-          prop="address"
-          align="center"
-          label="质保期"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="address"
-          align="center"
-          label="设备ID"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column prop="address" align="center" label="操作">
+        <!-- <el-table-column prop="address" align="center" label="操作">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
               >编辑
             </el-button>
             <el-button type="text" size="small">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </div>
     <div class="paginationBox">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :total="1000"
+        :total="total"
+        :current-page="pagination.pn"
+        :page-size="pagination.size"
         background
         layout="total, prev, pager, next"
       >
@@ -86,43 +84,55 @@
 </template>
 
 <script>
+import { getLoginLogPageData } from "@/api/systemManage";
+
 export default {
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-      ],
-      value1: "",
+      tableData: [],
+      form: {
+        username: undefined,
+        loginTime: undefined,
+      },
+      pagination: {
+        pn: 1,
+        size: 10,
+      },
+      total: 0,
     };
   },
+  mounted() {
+    this.getData();
+  },
   methods: {
-    handleClick(row) {
-      console.log(row);
+    async getData() {
+      const res = await getLoginLogPageData({
+        ...this.pagination,
+        ...this.form,
+      });
+      if (res.code === 200) {
+        this.tableData = res.data.records;
+        this.total = res.data.total;
+      }
     },
+    doSearch() {
+      this.getData();
+    },
+    reset() {
+      this.form = Object.keys(this.form).forEach((key) => {
+        this.form[key] = undefined;
+      });
+      this.getData();
+    },
+    // async handleClick(row) {
+    // },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.size = val;
+      this.getData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagination.pn = val;
+      this.getData();
     },
   },
 };
