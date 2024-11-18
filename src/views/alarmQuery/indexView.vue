@@ -64,7 +64,7 @@
       </el-table>
     </div>
     <div class="paginationBox">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="1000" background
+      <el-pagination :current-page.sync="filterData.pn" @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="filterData.total" background
         layout="total, prev, pager, next">
       </el-pagination>
     </div>
@@ -83,7 +83,8 @@ export default {
       tableData: [],
       filterData: {
         pn: 1,
-        size: 10
+        size: 10,
+        total: 0,
       },
       multipleSelection: []
     };
@@ -98,6 +99,12 @@ export default {
         if (res.code == 200) {
           console.log(res.data);
           this.tableData = res.data.records
+          this.filterData.total = res.data.total
+        } else {
+          this.$message({
+            message: '获取数据失败',
+            type: 'warning'
+          });
         }
       })
     },
@@ -159,7 +166,8 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.filterData.pn = val
+      this.getList()
     },
     handleClick(row) {
       console.log(row);
@@ -364,7 +372,7 @@ export default {
   }
 
   .paginationBox {
-    margin-top: vh(72);
+    margin-top: vh(100);
     display: flex;
     justify-content: flex-end;
 

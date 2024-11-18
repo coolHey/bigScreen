@@ -5,23 +5,27 @@
       <ul>
         <li>
           <span>运行速度</span>
-          <span>跑的飞快</span>
+          <span>{{data.v1 || '-'}}</span>
         </li>
         <li>
           <span>真空度</span>
-          <span>跑的飞快</span>
+          <span>{{data.v2 || '-'}}</span>
         </li>
         <li>
           <span>压力</span>
-          <span>跑的飞快</span>
+          <span>{{data.v3 || '-'}}</span>
         </li>
       </ul>
     </div>
-    <div class="content1 content">
+    <div class="content2 content">
       <ul>
         <li>
           <span>震动/流量</span>
-          <span>跑的飞快</span>
+          <span>{{data.v4 || '-'}}</span>
+        </li>
+        <li>
+          <span>热源温度</span>
+          <span>{{data.v8 || '-'}}</span>
         </li>
       </ul>
     </div>
@@ -29,23 +33,27 @@
       <ul>
         <li>
           <span>输出电压</span>
-          <span>跑的飞快</span>
+          <span>{{data.v5 || '-'}}</span>
         </li>
         <li>
           <span>输出电流</span>
-          <span>跑的飞快</span>
+          <span>{{data.v6 || '-'}}</span>
         </li>
         <li>
           <span>腔体温度</span>
-          <span>跑的飞快</span>
+          <span>{{data.v7 || '-'}}</span>
         </li>
       </ul>
     </div>
-    <div class="content1 content">
+    <div class="content2 content">
       <ul>
         <li>
-          <span>热源温度</span>
-          <span>跑的飞快</span>
+          <span>真空上料</span>
+          <span>{{data.v9 || '-'}}</span>
+        </li>
+        <li>
+          <span>螺旋输送</span>
+          <span>{{data.v10 || '-'}}</span>
         </li>
       </ul>
     </div>
@@ -65,7 +73,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">

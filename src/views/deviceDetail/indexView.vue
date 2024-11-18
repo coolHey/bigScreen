@@ -3,19 +3,19 @@
     <div class="filter">
       <ul>
         <li>
-          <span class="label">设备编号：</span>
-          <input type="text" placeholder="请输入" class="inp" />
+          <span class="label">设备ID：</span>
+          <input type="text" v-model="filterData.id" placeholder="请输入" class="inp" />
         </li>
         <li>
           <span class="label">质保日期：</span>
           <div class="datePick">
-            <el-date-picker v-model="value1" type="datetime" placeholder="选择日期时间">
+            <el-date-picker v-model="filterData.warrantyDate" value-format="YYYY-MM-DD HH:mm:ss" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
           </div>
         </li>
         <li>
-          <button class="btn">查询</button>
-          <button class="btn">重置</button>
+          <button class="btn" @click="handleQuery">查询</button>
+          <button class="btn" @click="handleReset">重置</button>
         </li>
       </ul>
       <div class="addBtn" @click="showAdd = true">新增设备</div>
@@ -42,13 +42,13 @@
       </el-table>
     </div>
     <div class="paginationBox">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="1000" background
+      <el-pagination :current-page.sync="filterData.pn" @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="filterData.total" background
         layout="total, prev, pager, next">
       </el-pagination>
     </div>
     <!-- <div class="addDialog"> -->
     <!-- </div> -->
-    <add-device-view @doSubmit="closeDialog(idx)" v-if="showAdd"></add-device-view>
+    <add-device-view @doSubmit="closeDialog(idx)" v-if="showAdd" :data="editData"></add-device-view>
   </div>
 </template>
 
@@ -68,7 +68,11 @@ export default {
       filterData: {
         pn: 1,
         size: 10,
-      }
+        total: 0,
+        warrantyDate: '', // 质保日期
+        id: '', // 设备编号
+      },
+      editData: {}
     };
   },
   mounted() {
@@ -80,6 +84,13 @@ export default {
       getListData(this.filterData).then(res => {
         if (res.code == 200) {
           this.tableData = res.data.records
+          this.filterData.total = res.data.total
+          this.filterData.pn = res.data.current
+        } else {
+          this.$message({
+            message: '获取数据失败',
+            type: 'warning'
+          });
         }
       })
     },
@@ -102,6 +113,18 @@ export default {
         }
       })
     },
+
+    // 查询
+    handleQuery() {
+      this.getList()
+    },
+    // 重置
+
+    handleReset() {
+      this.filterData.warrantyDate = ''
+      this.filterData.id = ''
+    },
+
     onSubmit() {
       console.log("submit!");
     },
@@ -109,14 +132,16 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.filterData.pn = val
+      this.getList()
     },
     handleClick(row) {
+      this.editData = row
       console.log(row);
     },
     closeDialog(idx) {
-      console.log(idx, 111);
       this.showAdd = false;
+      this.editData = null
     },
   },
 };
@@ -319,7 +344,7 @@ export default {
   }
 
   .paginationBox {
-    margin-top: vh(72);
+    margin-top: vh(100);
     display: flex;
     justify-content: flex-end;
 

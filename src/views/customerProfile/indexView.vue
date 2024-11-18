@@ -335,7 +335,7 @@ export default {
     }
   }
   .paginationBox {
-    margin-top: vh(72);
+    margin-top: vh(100);
     display: flex;
     justify-content: flex-end;
     :deep(.el-pagination) {

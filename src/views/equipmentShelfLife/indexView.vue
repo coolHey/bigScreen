@@ -3,26 +3,27 @@
     <div class="filter">
       <ul>
         <li>
-          <span class="label">设备编号：</span>
-          <input type="text" placeholder="请输入" class="inp" />
+          <span class="label">设备ID：</span>
+          <input type="text" v-model="filterData.id" placeholder="请输入" class="inp" />
         </li>
         <li>
-          <span class="label">质保日前：</span>
+          <span class="label">质保日期：</span>
           <div class="datePick">
             <el-date-picker
-              v-model="value1"
+              v-model="filterData.warrantyDate"
               type="datetime"
               placeholder="选择日期时间"
+              value-format="YYYY-MM-DD HH:mm:ss"
             >
             </el-date-picker>
           </div>
         </li>
         <li>
-          <button class="btn">查询</button>
+          <button class="btn" @click="handleQuery">查询</button>
           <button class="btn" @click="handleReset">重置</button>
         </li>
       </ul>
-      <div class="addBtn" @click="showAdd = true">新增设备</div>
+      <!-- <div class="addBtn" @click="showAdd = true">新增设备</div> -->
     </div>
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
@@ -76,7 +77,8 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :total="1000"
+        :current-page.sync="filterData.pn"
+        :total="filterData.total"
         background
         layout="total, prev, pager, next"
       >
@@ -107,7 +109,10 @@ export default {
       tableData: [],
       filterData: {
         pn: 1,
-        size: 10
+        size: 10,
+        total: 0,
+        id: '',
+        warrantyDate: ''
       },
       updateData: {}
     };
@@ -121,6 +126,13 @@ export default {
       getListData(this.filterData).then(res => {
         if (res.code == 200) {
           this.tableData = res.data.records
+          this.filterData.total = res.data.total
+          this.filterData.pn = res.data.current
+        } else {
+          this.$message({
+            message: '获取数据失败',
+            type: 'warning'
+          });
         }
       })
     },
@@ -145,10 +157,15 @@ export default {
         }
       })
     },
+
+    handleQuery() {
+      this.getList()
+    },
     
     // 重置搜索条件
     handleReset() {
-
+      this.filterData.id = ''
+      this.filterData.warrantyDate = ''
     },
     onSubmit() {
       console.log("submit!");
@@ -157,7 +174,8 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.filterData.pn = val
+      this.getList()
     },
     handleEdit(row) {
       this.updateData = row
@@ -352,7 +370,7 @@ export default {
     }
   }
   .paginationBox {
-    margin-top: vh(72);
+    margin-top: vh(100);
     display: flex;
     justify-content: flex-end;
     :deep(.el-pagination) {

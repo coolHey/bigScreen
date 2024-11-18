@@ -7,18 +7,9 @@
           <li>
             <div class="label">省：</div>
             <div class="elSelect small">
-              <el-select
-                v-model="submitData.province"
-                multiple
-                collapse-tags
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select v-model="submitData.province" collapse-tags placeholder="请选择" @change="provinceChange">
+                <el-option v-for="item in provincesList" :key="item.provinceId" :label="item.province"
+                  :value="item.provinceId">
                 </el-option>
               </el-select>
             </div>
@@ -26,18 +17,8 @@
           <li>
             <div class="label">市</div>
             <div class="elSelect small">
-              <el-select
-                v-model="submitData.city"
-                multiple
-                collapse-tags
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select v-model="submitData.city" collapse-tags placeholder="请选择" @change="cityChange">
+                <el-option v-for="item in citiesList" :key="item.cityId" :label="item.city" :value="item.cityId">
                 </el-option>
               </el-select>
             </div>
@@ -45,23 +26,13 @@
           <li>
             <div class="label">区/县</div>
             <div class="elSelect small">
-              <el-select
-                v-model="submitData.district"
-                multiple
-                collapse-tags
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select v-model="submitData.district" collapse-tags placeholder="请选择">
+                <el-option v-for="item in areasList" :key="item.areaId" :label="item.area" :value="item.areaId">
                 </el-option>
               </el-select>
             </div>
           </li>
-          <li>
+          <!-- <li>
             <div class="label">设备型号：</div>
             <div class="elSelect">
               <el-select
@@ -79,8 +50,16 @@
                 </el-option>
               </el-select>
             </div>
+          </li> -->
+          <li>
+            <div class="label">设备型号：</div>
+            <input type="text" v-model="submitData.type" name="" id="" class="inp" placeholder="请输入" />
           </li>
           <li>
+            <div class="label">出厂编号：</div>
+            <input type="text" v-model="submitData.factoryId" name="" id="" class="inp" placeholder="请输入" />
+          </li>
+          <!-- <li>
             <div class="label">出厂编号：</div>
             <div class="elSelect">
               <el-select
@@ -98,15 +77,12 @@
                 </el-option>
               </el-select>
             </div>
-          </li>
+          </li> -->
           <li>
             <div class="label">出厂日期</div>
             <div class="datePick">
-              <el-date-picker
-                v-model="submitData.factoryDate"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
+              <el-date-picker v-model="submitData.factoryDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间">
               </el-date-picker>
               <!-- <el-date-picker
                 v-model="value2"
@@ -121,11 +97,8 @@
           <li>
             <div class="label">调试日期：</div>
             <div class="datePick">
-              <el-date-picker
-                v-model="submitData.debugDate"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
+              <el-date-picker v-model="submitData.debugDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间">
               </el-date-picker>
             </div>
           </li>
@@ -135,25 +108,36 @@
           </li>
           <li>
             <div class="label">设备ID：</div>
-            <input type="text" v-model="submitData.id" name="" id="" class="inp" placeholder="请输入" />
+            <input type="text" v-model="submitData.id" :disabled="data.id" name="" id="" class="inp" placeholder="请输入" />
           </li>
         </ul>
       </div>
       <div class="btns">
         <div class="btn" @click="doSubmit(1)">取消</div>
-        <div class="btn" @click="doSubmit(1)">完成</div>
+        <div class="btn" @click="doSubmit(2)">完成</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getProvinces, getCities, getAreas, addDevice, upDateDevice } from '@/api/device';
 export default {
+  props: {
+    data: {
+      type: Object,
+      default: () => { },
+    },
+  },
+
   data() {
     return {
       value1: "",
       value2: "",
       value3: "",
+      provincesList: [],
+      citiesList: [],
+      areasList: [],
       submitData: {
         id: '', // 设备id
         client: '', //客户名称
@@ -169,10 +153,76 @@ export default {
       }
     };
   },
+
+  mounted() {
+    this.submitData.id = this.data.id
+    this.getProvincesList()
+  },
+
   methods: {
     doSubmit(idx) {
-      this.$emit("doSubmit", idx);
+      if (idx == 2) {
+        if (this.data.id) {
+          upDateDevice(this.submitData).then(res => {
+            if (res.code == 200) {
+              this.$emit("doSubmit", idx);
+              this.$message({
+                message: '操作成功',
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: '操作失败',
+                type: 'warning'
+              })
+            }
+          })
+        } else {
+          addDevice(this.submitData).then(res => {
+            if (res.code == 200) {
+              this.$emit("doSubmit", idx);
+              this.$message({
+                message: '操作成功',
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: '操作失败',
+                type: 'warning'
+              })
+            }
+          })
+        }
+      } else {
+        this.$emit("doSubmit", idx);
+      }
     },
+    // 省
+    getProvincesList() {
+      getProvinces().then(res => {
+        if (res.code == 200) {
+          this.provincesList = res.data
+        }
+      })
+    },
+
+    provinceChange() {
+      getCities({ provinceId: this.submitData.province }).then(res => {
+        if (res.code == 200) {
+          this.citiesList = res.data
+        }
+      })
+    },
+
+    cityChange() {
+      getAreas({ cityId: this.submitData.city }).then(res => {
+        console.log(res);
+        if (res.code == 200) {
+          this.areasList = res.data
+        }
+      })
+    },
+
   },
 };
 </script>
@@ -218,6 +268,7 @@ export default {
 
         li {
           margin-bottom: vh(24);
+
           .label {
             font-size: vw(18);
             color: #fff;
@@ -231,9 +282,11 @@ export default {
           .elSelect {
             width: vw(410);
             height: vh(40);
+
             &.small {
               width: vw(260);
             }
+
             :deep(.el-select) {
               width: 100%;
               height: 100%;
@@ -242,6 +295,7 @@ export default {
               border: none;
               box-shadow: none;
               padding: 0;
+
               .el-select__wrapper {
                 width: 100%;
                 height: 100%;
@@ -255,6 +309,7 @@ export default {
           .datePick {
             width: vw(410);
             height: vh(40);
+
             :deep(.el-date-editor) {
               background: transparent;
               width: 100%;
@@ -264,14 +319,15 @@ export default {
               border: none;
               box-shadow: none;
               padding: 0;
+
               .el-icon {
                 display: none;
               }
+
               .el-input__wrapper {
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
-                  no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;
@@ -296,10 +352,12 @@ export default {
         }
       }
     }
+
     .btns {
       display: flex;
       justify-content: center;
       align-items: center;
+
       .btn {
         width: vw(168);
         height: vh(40);
@@ -311,10 +369,12 @@ export default {
         letter-spacing: vw(1);
         font-style: normal;
         cursor: pointer;
+
         &:nth-of-type(1) {
           background: url(../../assets/image/cancel_bg.png) top left no-repeat;
           margin-right: vw(122);
         }
+
         &:nth-of-type(2) {
           background: url(../../assets/image/add_bg.png) top left no-repeat;
         }

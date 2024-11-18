@@ -2,7 +2,7 @@
   <div class="contentView">
     <div class="chart1 chart" ref="chart1"></div>
     <div class="chart2 chart" ref="chart2"></div>
-    <div class="contentBox">
+    <!-- <div class="contentBox">
       <div class="content content1">
         <ul>
           <li>
@@ -19,7 +19,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

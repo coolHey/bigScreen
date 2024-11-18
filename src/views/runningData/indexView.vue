@@ -4,28 +4,24 @@
       <ul>
         <li>
           <span class="label">设备ID：</span>
-          <input type="text" placeholder="请输入" class="inp" />
+          <input type="text" v-model="deviceId" placeholder="请输入" class="inp" />
         </li>
         <li>
           <span class="label">质保日前：</span>
           <div class="datePick">
-            <el-date-picker
-              v-model="value1"
-              type="datetime"
-              placeholder="选择日期时间"
-            >
+            <el-date-picker v-model="time" value-format="YYYY-MM-DD HH:mm:ss" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
           </div>
         </li>
         <li>
-          <div class="addBtn" @click="showAdd = true">查询</div>
+          <div class="addBtn" @click="handleQuery">查询</div>
         </li>
       </ul>
     </div>
     <div class="main">
-      <left-view></left-view>
-      <content-view></content-view>
-      <right-view></right-view>
+      <left-view :data="detailData"></left-view>
+      <content-view :data="detailData"></content-view>
+      <right-view :data="detailData"></right-view>
     </div>
   </div>
 </template>
@@ -34,6 +30,7 @@
 import leftView from "./leftView.vue";
 import contentView from "./contentView.vue";
 import rightView from "./rightView.vue";
+import { getListData } from '@/api/runningData'
 export default {
   components: {
     leftView,
@@ -45,31 +42,40 @@ export default {
       value1: "",
       region: "",
       showAdd: false,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      deviceId: 'monitor_1', // 设备id
+      time: '',
+      detailData: {}
     };
   },
+  mounted() {
+    this.getData()
+  },
   methods: {
+    getData() {
+      let nowTime = this.getCurrentDateTime()
+      getListData({ id: this.deviceId, time: this.time || nowTime }).then(res => {
+        if (res.code == 200) {
+          this.detailData = res.data.length && res.data[0]
+        }
+      })
+    },
+
+
+    getCurrentDateTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0');
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
+
+    handleQuery() {
+      this.getData()
+    },
+
     onSubmit() {
       console.log("submit!");
     },
@@ -90,18 +96,22 @@ export default {
 .container {
   padding: vh(35) vw(80) vh(64) vw(80);
   position: relative;
+
   .filter {
     display: flex;
     justify-content: center;
     align-items: center;
+
     ul {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+
       li {
         display: flex;
         align-items: center;
         margin-right: vw(96);
+
         .label {
           font-weight: 400;
           font-size: vw(16);
@@ -124,14 +134,17 @@ export default {
           font-style: normal;
           padding: vh(8) vh(12);
         }
+
         .datePick {
           width: vw(245);
           height: vh(38);
+
           :deep(.el-input) {
             width: 100%;
             height: 100%;
             border: none;
             background: rgba(0, 112, 255, 0.1);
+
             .el-input__wrapper {
               background: rgba(0, 112, 255, 0.1);
               box-shadow: inset 0px 0px vh(8) 0px rgba(0, 130, 255, 0.32);
@@ -147,6 +160,7 @@ export default {
         }
       }
     }
+
     .addBtn {
       background: url(../../assets/image/add_bg.png) top left no-repeat;
       background-size: 100% auto;
@@ -161,6 +175,7 @@ export default {
       cursor: pointer;
     }
   }
+
   .main {
     display: flex;
     justify-content: space-between;

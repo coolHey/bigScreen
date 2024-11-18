@@ -27,7 +27,7 @@
                 </el-select>
               </div>
             </li>
-            <li class="delete"></li>
+            <li class="delete" @click="handleDelete(idx)"></li>
             <!-- <li>
               <div class="label">设备到期日：</div>
               <div class="datePick">
@@ -124,6 +124,10 @@ export default {
       console.log(options);
       this.myChart = null
       this.initChart(options)
+    },
+
+    handleDelete(idx) {
+      this.filterList.splice(idx, 1)
     },
 
     addFilter() {
