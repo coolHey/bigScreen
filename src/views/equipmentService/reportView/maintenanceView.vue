@@ -4,7 +4,12 @@
       <ul>
         <li>
           <span class="label">设备ID：</span>
-          <input type="text" placeholder="请输入" class="inp" />
+          <input
+            type="text"
+            placeholder="请输入"
+            class="inp"
+            v-model="form.monitorId"
+          />
         </li>
         <!-- <li>
           <span class="label">质保日前：</span>
@@ -18,8 +23,8 @@
           </div>
         </li> -->
         <li>
-          <button class="btn">查询</button>
-          <button class="btn">导出</button>
+          <button class="btn" @click="doSearch">查询</button>
+          <button class="btn" @click="exportData">导出</button>
         </li>
       </ul>
       <!-- <div class="addBtn">新增设备</div> -->
@@ -27,37 +32,37 @@
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column
-          prop="date"
+          prop="monitorId"
           align="center"
           label="设备ID"
           show-overflow-tooltip
         >
           <template #default="scope">
             <div @click="getCurrentScope(scope)">
-              <span>{{ scope.row.date }}</span>
+              <span>{{ scope.row.msg.msgTime }}</span>
               <span class="warning"> 需要维保，请及时处理</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="runTime"
           align="center"
           label="总运行时常"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="runCount"
           align="center"
           label="运行次数"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="msg.msgTime"
           align="center"
           label="提醒时间"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column prop="address" align="center" label="操作">
+        <el-table-column align="center" label="操作">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
               >提醒
@@ -70,7 +75,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :total="1000"
+        :total="total"
+        :current-page="pagination.pn"
+        :page-size="pagination.size"
         background
         layout="total, prev, pager, next"
       >
@@ -80,46 +87,65 @@
 </template>
 
 <script>
+import { getMaintainData, postNotice } from "@/api/afterSales";
+import { download } from "@/utils/download";
+import { ElMessage } from "element-plus";
+import QueryString from "qs";
+
 export default {
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "数据对比分析",
-        },
-      ],
-      value1: "",
+      tableData: [],
+      form: {
+        monitorId: "",
+      },
+      pagination: {
+        pn: 1,
+        size: 10,
+      },
+      total: 0,
     };
   },
+  mounted() {
+    this.getData();
+  },
   methods: {
-    handleClick(row) {
-      console.log(row);
+    async getData() {
+      const res = await getMaintainData({
+        ...this.pagination,
+        ...this.form,
+      });
+      if (res.code === 200) {
+        this.tableData = res.data.records;
+        this.total = res.data.total;
+      }
+    },
+    doSearch() {
+      this.getData();
+    },
+    exportData() {
+      download(
+        "http://146.56.215.178:9999/msg/maintainExport?" +
+          QueryString.stringify({
+            ids: JSON.stringify(this.tableData.map((item) => item.id)),
+          })
+      );
+    },
+    async handleClick(row) {
+      const res = await postNotice(row.id);
+      if (res.code === 200) {
+        ElMessage.success("提醒成功");
+      } else {
+        ElMessage.error(res.message);
+      }
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.size = val;
+      this.getData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    getCurrentScope(val) {
-      console.log(val.row);
+      this.pagination.pn = val;
+      this.getData();
     },
   },
 };

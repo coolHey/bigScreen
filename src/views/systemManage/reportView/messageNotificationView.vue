@@ -2,15 +2,15 @@
   <div class="dataAnalysis">
     <div class="messageList">
       <ul>
-        <li v-for="item in 10" :key="item">
+        <li v-for="item in listData" :key="item.id">
           <div class="message">
             <div class="img"></div>
             <div class="info">
               <p>消息通知</p>
-              <p>设备JXB-100890需要维保，请及时处理。</p>
+              <p>{{ item.msg }}</p>
             </div>
           </div>
-          <div class="time">2023-09-20 12:00:00</div>
+          <div class="time">{{ item.msgTime }}</div>
         </li>
       </ul>
     </div>
@@ -18,7 +18,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :total="1000"
+        :total="total"
+        :current-page="pagination.pn"
+        :page-size="pagination.size"
         background
         layout="total, prev, pager, next"
       >
@@ -28,16 +30,39 @@
 </template>
 
 <script>
+import { getNoticePageData } from "@/api/systemManage";
+
 export default {
   data() {
-    return {};
+    return {
+      listData: [],
+      pagination: {
+        pn: 1,
+        size: 10,
+      },
+      total: 0,
+    };
+  },
+  mounted() {
+    this.getData();
   },
   methods: {
+    async getData() {
+      const res = await getNoticePageData({
+        ...this.pagination,
+      });
+      if (res.code === 200) {
+        this.listData = res.data.records;
+        this.total = res.data.total;
+      }
+    },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.size = val;
+      this.getData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagination.pn = val;
+      this.getData();
     },
   },
 };

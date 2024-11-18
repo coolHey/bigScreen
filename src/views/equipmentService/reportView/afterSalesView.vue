@@ -4,13 +4,20 @@
       <ul>
         <li>
           <span class="label">设备ID：</span>
-          <input type="text" placeholder="请输入" class="inp" />
+          <input
+            type="text"
+            placeholder="请输入"
+            class="inp"
+            v-model="form.monitorId"
+          />
         </li>
         <li>
           <span class="label">质保日期：</span>
           <div class="datePick">
             <el-date-picker
-              v-model="value1"
+              format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              v-model="form.soldTime"
               type="datetime"
               placeholder="选择日期时间"
             >
@@ -18,8 +25,8 @@
           </div>
         </li>
         <li>
-          <button class="btn">查询</button>
-          <button class="btn">导出</button>
+          <button class="btn" @click="doSearch">查询</button>
+          <button class="btn" @click="exportData">导出</button>
         </li>
       </ul>
       <!-- <div class="addBtn">新增设备</div> -->
@@ -27,25 +34,25 @@
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column
-          prop="date"
+          prop="monitorId"
           align="center"
           label="设备ID"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="date"
+          prop="soldCount"
           align="center"
           label="维修次数"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="date"
+          prop="soldTime"
           align="center"
           label="维修时间"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="name"
+          prop="soldPeople"
           align="center"
           label="维修人员"
           show-overflow-tooltip
@@ -64,7 +71,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :total="1000"
+        :total="total"
+        :current-page="pagination.pn"
+        :page-size="pagination.size"
         background
         layout="total, prev, pager, next"
       >
@@ -74,43 +83,60 @@
 </template>
 
 <script>
+import { getSoldPageData } from "@/api/afterSales";
+import { download } from "@/utils/download";
+import QueryString from "qs";
+
 export default {
   data() {
     return {
-      tableData: [
-        {
-          date: "1",
-          name: "11",
-          address: "数据对比分析",
-        },
-        {
-          date: "2",
-          name: "22",
-          address: "数据对比分析",
-        },
-        {
-          date: "3",
-          name: "33",
-          address: "数据对比分析",
-        },
-        {
-          date: "4",
-          name: "44",
-          address: "数据对比分析",
-        },
-      ],
-      value1: "",
+      tableData: [],
+      form: {
+        monitorId: undefined,
+        soldTime: undefined,
+      },
+      pagination: {
+        pn: 1,
+        size: 10,
+      },
+      total: 0,
     };
   },
+  mounted() {
+    this.getData();
+  },
   methods: {
-    handleClick(row) {
-      console.log(row);
+    async getData() {
+      const res = await getSoldPageData({
+        ...this.pagination,
+        ...this.form,
+      });
+      if (res.code === 200) {
+        this.tableData = res.data.records;
+        this.total = res.data.total;
+      }
     },
+    doSearch() {
+      this.getData();
+    },
+    exportData() {
+      download(
+        "http://146.56.215.178:9999/msg/errorExport?" +
+          QueryString.stringify({
+            ids: JSON.stringify(this.tableData.map((item) => item.id)),
+          })
+      );
+    },
+    // async handleClick(row) {
+
+    // },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.size = val;
+      this.getData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagination.pn = val;
+      this.getData();
     },
   },
 };
