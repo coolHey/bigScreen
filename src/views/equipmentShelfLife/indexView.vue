@@ -184,6 +184,9 @@ export default {
     closeDialog(idx) {
       console.log(idx, 111);
       this.showAdd = false;
+      this.filterData.pn = 1
+      this.filterData.size = 10
+      this.getList()
     },
   },
 };

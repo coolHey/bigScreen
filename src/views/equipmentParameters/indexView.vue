@@ -9,19 +9,19 @@
             <li>
               <div class="label">时间范围：</div>
               <div class="datePick">
-                <el-date-picker v-model="item.time" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
-                  :default-time="defaultTime1">
+                <el-date-picker v-model="item.time" value-format="YYYY-MM-DD HH:mm:ss" type="datetimerange"
+                  start-placeholder="开始日期" end-placeholder="结束日期" :default-time="defaultTime1">
                 </el-date-picker>
               </div>
             </li>
             <li>
               <div class="label">设备ID：</div>
-              <input type="text" name="" id="" class="inp" placeholder="请输入" v-model="item.id" />
+              <input type="text" name="" id="" class="inp" placeholder="请输入" v-model="item.monitorId" />
             </li>
             <li>
               <div class="label">选择参数：</div>
               <div class="elSelect">
-                <el-select v-model="item.parameter" multiple collapse-tags placeholder="请选择">
+                <el-select v-model="item.keyWords" multiple collapse-tags placeholder="请选择">
                   <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
@@ -56,29 +56,90 @@
 
 <script>
 import * as echarts from "echarts";
+import { getCompareData } from '@/api/parameters'
 export default {
   data() {
     return {
       options: [
         {
-          value: "选项1",
-          label: "黄金糕",
+          value: "k1",
+          label: "离心机-运行模式",
         },
         {
-          value: "选项2",
-          label: "双皮奶",
+          value: "k2",
+          label: "离心机-运行速度",
         },
         {
-          value: "选项3",
-          label: "蚵仔煎",
+          value: "k3",
+          label: "离心机-运行频率",
         },
         {
-          value: "选项4",
-          label: "龙须面",
+          value: "k4",
+          label: "离心机-氮气",
         },
         {
-          value: "选项5",
-          label: "北京烤鸭",
+          value: "k5",
+          label: "离心机-输出电压",
+        },
+        {
+          value: "k6",
+          label: "离心机-输出电流",
+        },
+        {
+          value: "k7",
+          label: "离心机-输出功率",
+        },
+        {
+          value: "k8",
+          label: "离心机-震动值",
+        },
+        {
+          value: "k9",
+          label: "离心机-真空上料",
+        },
+        {
+          value: "k10",
+          label: "离心机-螺旋输送",
+        },
+        {
+          value: "v1",
+          label: "干燥机-运行速度",
+        },
+        {
+          value: "v2",
+          label: "干燥机-真空度",
+        },
+        {
+          value: "v3",
+          label: "干燥机-压力",
+        },
+        {
+          value: "v4",
+          label: "干燥机-振动/流量",
+        },
+        {
+          value: "v5",
+          label: "干燥机-输出电压",
+        },
+        {
+          value: "v6",
+          label: "干燥机-输出电流",
+        },
+        {
+          value: "v7",
+          label: "干燥机-腔体温度",
+        },
+        {
+          value: "v8",
+          label: "干燥机-热源温泉",
+        },
+        {
+          value: "v9",
+          label: "干燥机-真空上料",
+        },
+        {
+          value: "v10",
+          label: "干燥机-螺旋输送",
         },
       ],
       value1: [],
@@ -86,9 +147,10 @@ export default {
       value3: [],
       filterList: [
         {
-          time: [],
-          id: [],
-          parameter: []
+          time: '',
+          monitorId: '',
+          id: '',
+          keyWords: []
         }
       ],
       myChart: null
@@ -100,7 +162,26 @@ export default {
   },
 
   methods: {
+    getRandomNumberUnderOneThousand() {
+      return Math.floor(Math.random() * 1000);
+    },
+
     getData() {
+      let filterData = JSON.parse(JSON.stringify(this.filterList)) || []
+      filterData.forEach((v, i) => {
+        filterData[i].beginTime = v.time.length >= 1 ? v.time[0] : ''
+        filterData[i].endTime = v.time.length >= 1 ? v.time[1] : ''
+      })
+      let check = false
+      this.filterList.map(v => {
+        if (!v.keyWords.length || v.time.length < 2 || !v.monitorId) {
+          check = true
+        }
+      })
+      if (check) {
+        alert('请输入完整分析条件')
+        return
+      }
       let options = {
         nameData: [],
         series: []
@@ -116,8 +197,7 @@ export default {
           symbol: "none",
         }
         data.forEach(k => {
-          k = k + idx
-          item.data.push(k)
+          item.data.push(this.getRandomNumberUnderOneThousand())
         })
         options.series.push(item)
       })
@@ -133,8 +213,9 @@ export default {
     addFilter() {
       this.filterList.push({
         time: [],
-        id: [],
-        parameter: []
+        id: '',
+        monitorId: '',
+        keyWords: []
       })
     },
 
@@ -162,7 +243,7 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          data: ["数值1", "数值2", "数值3", "数值4", "数值5", "数值6", "数值7"],
           axisTick: {
             show: false,
           },
@@ -317,8 +398,8 @@ export default {
                 }
 
                 .el-input__wrapper {
-                  width: 100%;
-                  height: 100%;
+                  // width: 100%;
+                  // height: 100%;
                   background: url(../../assets/image/inp_bg.png) top left no-repeat;
                   background-size: 100% 100%;
                   border: none;

@@ -137,11 +137,15 @@ export default {
     },
     handleClick(row) {
       this.editData = row
+      this.showAdd = true
       console.log(row);
     },
     closeDialog(idx) {
       this.showAdd = false;
       this.editData = null
+      this.filterData.pn = 1
+      this.filterData.size = 10
+      this.getList();
     },
   },
 };

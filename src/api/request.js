@@ -7,9 +7,9 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (config) => {
-    // const token = window.localStorage.getItem("token");
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ7XCJuYW1lXCI6XCJyb290XCJ9IiwiaXNzIjoidXByb2FyIiwiZXhwIjoxNzMxNzE2NDk1LCJ1cHJvYXIiOiIxMjM0NTYifQ.F7ICZOZg-yNLpIoTbVtqByY4d_9PUIT9SBZt5EVeoZo";
+    const token = window.localStorage.getItem("token");
+    // const token =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ7XCJuYW1lXCI6XCJyb290XCJ9IiwiaXNzIjoidXByb2FyIiwiZXhwIjoxNzMxNzE2NDk1LCJ1cHJvYXIiOiIxMjM0NTYifQ.F7ICZOZg-yNLpIoTbVtqByY4d_9PUIT9SBZt5EVeoZo";
     config.headers["token"] = token;
     config.headers["Content-Type"] = "application/json";
     return config;

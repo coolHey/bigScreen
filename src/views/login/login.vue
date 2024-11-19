@@ -6,18 +6,26 @@
       </div>
       <div class="form">
         <div class="username item">
-          <div class="icon"></div>
+          <div class="icon">
+            <el-icon class="elIcon" style="width: 100%;height: 100%;">
+              <User />
+            </el-icon>
+          </div>
           <div class="inp">
             <input type="text" v-model="username" />
           </div>
         </div>
         <div class="password item">
-          <div class="icon"></div>
+          <div class="icon">
+            <el-icon class="elIcon" style="width: 100%;height: 100%;">
+              <Tools />
+            </el-icon>
+          </div>
           <div class="inp">
             <input type="password" v-model="password" />
           </div>
         </div>
-        <div class="code">
+        <!-- <div class="code">
           <div class="code_item">
             <div class="icon"></div>
             <div class="inp">
@@ -27,15 +35,18 @@
           <div class="code_img">
             <img src="http://146.56.215.178:9999/user/code" alt="" />
           </div>
+        </div> -->
+        <div class="btn_box">
+          <div class="conform_btn" @click="goPage">登陆</div>
+          <div class="conform_btn" @click="doSignUp">注册</div>
         </div>
-        <div class="conform_btn" @click="goPage">登陆</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { login } from "@/api/login";
+import { login, register } from "@/api/login";
 
 export default {
   name: "loginView",
@@ -51,17 +62,36 @@ export default {
       login({
         username: this.username,
         password: this.password,
-        code: this.code,
       }).then((res) => {
         if (res.code == 200) {
           this.$router.push({
-            path: "/",
+            path: "/home",
           });
+          console.log(res);
+          window.localStorage.setItem('token', res.data.token)
         } else {
           alert(res.message);
         }
       });
     },
+
+    doSignUp() {
+      register({
+        username: this.username,
+        password: this.password,
+      }).then(res => {
+        if (res.code == 200) {
+          this.username = ''
+          this.password = ''
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+        } else {
+          alert(res.message);
+        }
+      })
+    }
   },
 };
 </script>
@@ -109,6 +139,16 @@ export default {
         .icon {
           width: vw(52);
           height: vh(52);
+
+          .elIcon {
+            width: vw(40);
+            height: vh(40);
+            color: white;
+            svg {
+              width: vw(40);
+              height: vh(40);
+            }
+          }
         }
 
         .inp {
@@ -181,9 +221,17 @@ export default {
         }
       }
 
+      .btn_box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: vw(436);
+      }
+
       .conform_btn {
         margin-top: vh(20);
-        width: vw(436);
+        cursor: pointer;
+        width: vw(210);
         height: vh(52);
         background: #0584bf;
         box-shadow: 0 vh(2) vh(4) 0 rgba(0, 0, 0, 0.5);

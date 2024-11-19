@@ -15,7 +15,7 @@
           <li>
             <div class="label">设备起始日：</div>
             <div class="datePick">
-              <el-date-picker v-model="submitData.factoryDate" type="datetimerange" start-placeholder="开始日期"
+              <el-date-picker v-model="submitData.factoryDate" type="datetime" start-placeholder="开始日期"
                 end-placeholder="结束日期" :default-time="defaultTime1">
               </el-date-picker>
             </div>
@@ -210,7 +210,7 @@ export default {
         color: #fff;
         letter-spacing: vw(1);
         font-style: normal;
-
+        cursor: pointer;
         &:nth-of-type(1) {
           background: url(../../assets/image/cancel_bg.png) top left no-repeat;
           margin-right: vw(122);

@@ -108,7 +108,20 @@
           </li>
           <li>
             <div class="label">设备ID：</div>
-            <input type="text" v-model="submitData.id" :disabled="data.id" name="" id="" class="inp" placeholder="请输入" />
+            <input type="text" v-model="submitData.id" :disabled="data.id" name="" id="" class="inp"
+              placeholder="请输入" />
+          </li>
+          <li>
+            <div class="label">质保期：</div>
+            <input type="text" v-model="submitData.warrantySpan" name="" id="" class="inp" placeholder="请输入" />
+          </li>
+          <li>
+            <div class="label">质保到期日</div>
+            <div class="datePick">
+              <el-date-picker v-model="submitData.warrantyDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间">
+              </el-date-picker>
+            </div>
           </li>
         </ul>
       </div>
@@ -155,6 +168,9 @@ export default {
   },
 
   mounted() {
+    if (this.data.id) {
+      Object.assign(this.submitData, this.data)
+    }
     this.submitData.id = this.data.id
     this.getProvincesList()
   },
@@ -162,6 +178,16 @@ export default {
   methods: {
     doSubmit(idx) {
       if (idx == 2) {
+        let check = false
+        for (const [key, value] of Object.entries(this.submitData)) {
+          if (!this.submitData[key]) {
+            check = true
+          }
+        }
+        if (check) {
+          alert('请填写完整内容')
+          return
+        }
         if (this.data.id) {
           upDateDevice(this.submitData).then(res => {
             if (res.code == 200) {
@@ -172,7 +198,7 @@ export default {
               })
             } else {
               this.$message({
-                message: '操作失败',
+                message: res.message,
                 type: 'warning'
               })
             }
@@ -187,7 +213,7 @@ export default {
               })
             } else {
               this.$message({
-                message: '操作失败',
+                message: res.message,
                 type: 'warning'
               })
             }
