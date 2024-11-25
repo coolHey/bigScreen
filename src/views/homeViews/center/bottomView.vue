@@ -23,15 +23,21 @@
           <div class="desc">
             <p>
               <span class="label">未处理数：</span>
-              <span class="num">0</span>
+              <span class="num">{{
+                monitorErrorHandleState.errorHandle?.errorNoSolve
+              }}</span>
             </p>
             <p>
               <span class="label">已处理数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState.errorHandle?.errorSolved
+              }}</span>
             </p>
             <p>
               <span class="label">异常总数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState.errorHandle?.errorTotal
+              }}</span>
             </p>
           </div>
         </div>
@@ -40,15 +46,21 @@
           <div class="desc">
             <p>
               <span class="label">未处理数：</span>
-              <span class="num">0</span>
+              <span class="num">{{
+                monitorErrorHandleState.remoteHandle?.errorNoSolve
+              }}</span>
             </p>
             <p>
               <span class="label">已处理数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState.remoteHandle?.errorSolved
+              }}</span>
             </p>
             <p>
               <span class="label">异常总数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState.remoteHandle?.errorTotal
+              }}</span>
             </p>
           </div>
         </div>
@@ -69,18 +81,27 @@ export default {
   data() {
     return {
       myChart: null,
+      monitorErrorHandleState: {},
     };
   },
-  computed: {
-    monitorErrorHandleState() {
-      return this.data.monitorErrorHandleState || {};
+  watch: {
+    data: {
+      handler(value) {
+        this.monitorErrorHandleState = value?.monitorErrorHandleState || {};
+        this.$nextTick(() => {
+          this.initChart1();
+          this.initChart2();
+          this.initChart3();
+        });
+      },
+      immediate: true,
     },
   },
-  mounted() {
-    this.initChart1();
-    this.initChart2();
-    this.initChart3();
-  },
+  // mounted() {
+  //   this.initChart1();
+  //   this.initChart2();
+  //   this.initChart3();
+  // },
   methods: {
     initChart1() {
       const { errorCount = {} } = this.monitorErrorHandleState;
