@@ -4,12 +4,22 @@
       <ul>
         <li>
           <span class="label">设备ID：</span>
-          <input type="text" v-model="deviceId" placeholder="请输入" class="inp" />
+          <input
+            type="text"
+            v-model="deviceId"
+            placeholder="请输入"
+            class="inp"
+          />
         </li>
         <li>
           <span class="label">质保日前：</span>
           <div class="datePick">
-            <el-date-picker v-model="time" value-format="YYYY-MM-DD HH:mm:ss" type="datetime" placeholder="选择日期时间">
+            <el-date-picker
+              v-model="time"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              type="datetime"
+              placeholder="选择日期时间"
+            >
             </el-date-picker>
           </div>
         </li>
@@ -20,8 +30,11 @@
     </div>
     <div class="main">
       <left-view :data="detailData"></left-view>
-      <content-view :data="detailData"></content-view>
-      <right-view :data="detailData"></right-view>
+      <content-view :data="lineData"></content-view>
+      <right-view
+        :data="currentData?.[0] || {}"
+        :time="currentDateTime"
+      ></right-view>
     </div>
   </div>
 </template>
@@ -30,7 +43,8 @@
 import leftView from "./leftView.vue";
 import contentView from "./contentView.vue";
 import rightView from "./rightView.vue";
-import { getListData } from '@/api/runningData'
+import { getListData, getAutoData } from "@/api/runningData";
+import { ElMessage } from "element-plus";
 export default {
   components: {
     leftView,
@@ -39,55 +53,99 @@ export default {
   },
   data() {
     return {
-      value1: "",
+      // value1: "",
       region: "",
       showAdd: false,
-      deviceId: 'monitor_1', // 设备id
-      time: '',
-      detailData: {}
+      deviceId: "monitor_1", // 设备id
+      time: "",
+      detailData: {},
+      lineData: {},
+      currentData: null,
+      timer: null,
     };
   },
   mounted() {
-    this.getData()
+    // this.getData()
+    this.getCurrentDateTime();
+    this.handleQuery();
+    this.getInfoData();
+    this.timer = setInterval(() => {
+      this.getInfoData();
+    }, 5000);
   },
   methods: {
-    getData() {
-      let nowTime = this.getCurrentDateTime()
-      getListData({ id: this.deviceId, time: this.time || nowTime }).then(res => {
+    getInfoData() {
+      // getAutoData({ id: this.deviceId }).then(res => {
+      //   if (res.code == 200) {
+      //     this.detailData = res.data
+      //   } else {
+      //     alert(res.message)
+      //   }
+      // })
+      getAutoData({ id: this.deviceId }, { type: "centrifuge" }).then((res) => {
         if (res.code == 200) {
-          this.detailData = res.data.length && res.data[0]
+          this.detailData = res.data;
+        } else {
+          ElMessage.error(res.message);
         }
-      })
+      });
     },
 
+    getData(beginTime, endTime, key) {
+      // let nowTime = this.getCurrentDateTime();
+      // // getListData({ id: this.deviceId, time: this.time || nowTime }).then(res => {
+      // //   if (res.code == 200) {
+      // //     this.detailData = res.data.length && res.data[0]
+      // //   } else {
+      // //     alert(res.message)
+      // //   }
+      // // })
+      getListData(this.deviceId, {
+        type: "centrifuge",
+        beginTime,
+        endTime,
+      }).then((res) => {
+        if (res.code == 200) {
+          this[key] = res.data.length && res.data;
+        } else {
+          ElMessage.error(res.message);
+        }
+      });
+    },
 
     getCurrentDateTime() {
       const now = new Date();
       const year = now.getFullYear();
-      const month = (now.getMonth() + 1).toString().padStart(2, '0');
-      const day = now.getDate().toString().padStart(2, '0');
-      const hours = now.getHours().toString().padStart(2, '0');
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      const seconds = now.getSeconds().toString().padStart(2, '0');
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      const month = (now.getMonth() + 1).toString().padStart(2, "0");
+      const day = now.getDate().toString().padStart(2, "0");
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      // return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      this.currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      // this.getData("2025-03-06 00:00:00", "2025-03-06 00:00:00", "currentData");
+      this.getData(this.currentDateTime, this.currentDateTime, "currentData");
     },
 
     handleQuery() {
-      this.getData()
+      // clearInterval(this.timer);
+      // if (this.deviceId) {
+      //   this.getInfoData();
+      //   this.timer = setInterval(() => {
+      //     this.getInfoData();
+      //   }, 5000);
+      // } else {
+      //   this.detailData = {};
+      // }
+      if (this.time.length) {
+        this.getData(this.time[0], this.time[1], "lineData");
+      }
     },
-
-    onSubmit() {
-      console.log("submit!");
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    handleClick(row) {
-      console.log(row);
-    },
+  },
+  beforeMount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   },
 };
 </script>

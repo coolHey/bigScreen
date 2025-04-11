@@ -22,16 +22,16 @@
       </div>
       <div class="statusItem abnormal">
         <div class="unit">
-          <p>现场处理</p>
+          <p>暂停使用</p>
           <p>
-            <span>{{ getRate("onsite-handling") }}%</span>
-            <span>{{ getVal("onsite-handling") }}台</span>
+            <span>{{ getRate("shut-down") }}%</span>
+            <span>{{ getVal("shut-down") }}台</span>
           </p>
         </div>
         <div class="progressBar">
           <div
             class="progress"
-            :style="{ width: `${getRate('onsite-handling')}%` }"
+            :style="{ width: `${getRate('shut-down')}%` }"
           ></div>
         </div>
       </div>
@@ -39,14 +39,14 @@
         <div class="unit">
           <p>异常警告</p>
           <p>
-            <span>{{ getRate("failure-occurs") }}%</span>
-            <span>{{ getVal("failure-occurs") }}台</span>
+            <span>{{ getRate("abnormal-alarm") }}%</span>
+            <span>{{ getVal("abnormal-alarm") }}台</span>
           </p>
         </div>
         <div class="progressBar">
           <div
             class="progress"
-            :style="{ width: `${getRate('failure-occurs')}%` }"
+            :style="{ width: `${getRate('abnormal-alarm')}%` }"
           ></div>
         </div>
       </div>
@@ -143,6 +143,9 @@ export default {
           letter-spacing: vw(2);
           text-align: left;
           font-style: normal;
+          span:nth-of-type(1) {
+            margin-right: vw(10);
+          }
         }
       }
 

@@ -68,9 +68,15 @@ export default {
         //   children: [],
         // },
         {
-          label: "设备运行数据",
+          label: "设备运行数据-干燥机",
           value: 11,
-          path: "/runningData",
+          path: "/runningData-1",
+          children: [],
+        },
+        {
+          label: "设备运行数据-离心机",
+          value: 11,
+          path: "/runningData-2",
           children: [],
         },
         {

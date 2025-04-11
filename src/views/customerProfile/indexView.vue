@@ -16,10 +16,18 @@
           <button class="btn" @click="form.monitorId = undefined">重置</button>
         </li>
       </ul>
-      <div class="addBtn" @click="exportData">一键导出</div>
+      <div class="btns">
+        <div class="addBtn" @click="addItem">新增</div>
+        <div class="addBtn" @click="exportData">一键导出</div>
+      </div>
     </div>
     <div class="tableBox">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection"> </el-table-column>
         <el-table-column
           type="index"
           align="center"
@@ -56,36 +64,6 @@
           show-overflow-tooltip
           label="联系电话"
         ></el-table-column>
-        <el-table-column
-          prop="salesClerk"
-          align="center"
-          label="销售员"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="saleTime"
-          align="center"
-          show-overflow-tooltip
-          label="时间"
-        ></el-table-column>
-        <el-table-column
-          prop="afterSales"
-          align="center"
-          label="售后服务记录售后人员"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="afterSalesCount"
-          align="center"
-          show-overflow-tooltip
-          label="次数"
-        ></el-table-column>
-        <el-table-column
-          prop="result"
-          align="center"
-          show-overflow-tooltip
-          label="结果"
-        ></el-table-column>
         <el-table-column align="center" label="操作">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
@@ -115,14 +93,17 @@
     v-if="showEdit"
     @doSubmit="showEdit = false"
     :updateData="editData"
+    :is-add="!editData.id"
   />
 </template>
 
 <script>
-import { deleteCustomer, getArchivePageData } from "@/api/customerProfile";
-import { download } from "@/utils/download";
+import {
+  deleteCustomer,
+  getArchivePageData,
+  doWarnExport,
+} from "@/api/customerProfile";
 import { ElMessage } from "element-plus";
-import QueryString from "qs";
 import EditCustomer from "./editCustomer.vue";
 export default {
   components: { EditCustomer },
@@ -139,12 +120,19 @@ export default {
       total: 0,
       editData: {},
       showEdit: false,
+      multipleSelection: [],
+      isAdd: false,
     };
   },
   mounted() {
     this.getData();
   },
   methods: {
+    // 绑定选择项
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+
     async getData() {
       const res = await getArchivePageData({
         ...this.pagination,
@@ -159,19 +147,46 @@ export default {
       this.getData();
     },
     exportData() {
-      download(
-        "http://146.56.215.178:9999/client/archiveExport?" +
-          QueryString.stringify({
-            ids: JSON.stringify(this.tableData.map((item) => item.id)),
-          })
-      );
+      let ids = [];
+      this.multipleSelection.forEach((v) => {
+        console.log(v);
+        ids.push(v.id);
+      });
+      if (!ids.length) {
+        this.$message({
+          message: "请选择需要导出的数据",
+          type: "warning",
+        });
+        return;
+      }
+      doWarnExport({ ids: ids ? ids.join(",") : "" }).then((res) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(new Blob([res]));
+        link.download = "下载文件.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        console.log(res);
+      });
+      // download(
+      //   "http://146.56.215.178:9999/client/archiveExport?" +
+      //     QueryString.stringify({
+      //       ids: JSON.stringify(this.tableData.map((item) => item.id)),
+      //     })
+      // );
+    },
+    async addItem() {
+      this.editData = {};
+      this.showEdit = true;
+      // this.getData();
     },
     async handleClick(row) {
       this.editData = {
         ...row,
       };
       this.showEdit = true;
-      this.getData();
+      // this.getData();
     },
     async deleteItem(row) {
       const res = await deleteCustomer(row.id);
@@ -279,17 +294,23 @@ export default {
         }
       }
     }
-    .addBtn {
-      background: url(../../assets/image/add_bg.png) top left no-repeat;
-      background-size: 100% auto;
-      width: vw(170);
-      height: vh(42);
-      text-align: center;
-      line-height: vh(42);
-      font-size: vw(16);
-      color: #fff;
-      letter-spacing: vw(2);
-      font-style: normal;
+    .btns {
+      display: flex;
+      align-items: center;
+      .addBtn {
+        background: url(../../assets/image/add_bg.png) top left no-repeat;
+        background-size: 100% auto;
+        cursor: pointer;
+        width: vw(170);
+        height: vh(42);
+        text-align: center;
+        line-height: vh(42);
+        font-size: vw(16);
+        color: #fff;
+        letter-spacing: vw(2);
+        font-style: normal;
+        margin-left: vw(20);
+      }
     }
   }
   .tableBox {

@@ -1,14 +1,14 @@
 <template>
   <div class="editCustomer">
     <div class="addBox">
-      <h3 class="title">编辑客户档案</h3>
+      <h3 class="title">新增售后</h3>
       <div class="formData">
         <ul>
           <li>
-            <div class="label">客户名称：</div>
+            <div class="label">设备ID：</div>
             <input
               type="text"
-              v-model="submitData.clientName"
+              v-model="submitData.monitorId"
               name=""
               id=""
               class="inp"
@@ -16,29 +16,29 @@
             />
           </li>
           <li>
-            <div class="label">客户地址：</div>
+            <div class="label">维修人员：</div>
             <input
               type="text"
               name=""
-              v-model="submitData.clientAddress"
+              v-model="submitData.repairer"
               id=""
               class="inp"
               placeholder="请输入"
             />
           </li>
           <li>
-            <div class="label">联系人：</div>
-            <input
-              type="text"
-              name=""
-              v-model="submitData.contactPerson"
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
+            <div class="label">维修时间：</div>
+            <div class="datePick">
+              <el-date-picker
+                v-model="submitData.soldTime"
+                type="datetime"
+                placeholder="选择日期时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+              ></el-date-picker>
+            </div>
           </li>
           <li>
-            <div class="label">联系电话：</div>
+            <div class="label">维修内容：</div>
             <input
               type="text"
               name=""
@@ -59,17 +59,16 @@
 </template>
 
 <script>
-import { addCustomer, updateCustomer } from "@/api/customerProfile";
+import { postDetailAdd } from "@/api/afterSales";
 export default {
   props: ["updateData", "isAdd"],
   data() {
     return {
       submitData: {
-        id: "", // 客户编号
-        clientName: "", // 客户名称
-        clientAddress: "", // 客户地址
-        contactPerson: "", // 联系人
-        contactPhone: "", // 联系电话
+        monitorId: "", // 设备id
+        repairer: "", // 维修人员
+        soldTime: "", // 维修时间
+        contactPhone: "", // 维修内容
       },
     };
   },
@@ -84,9 +83,7 @@ export default {
         this.reset();
         return;
       }
-      const res = this.isAdd
-        ? await addCustomer(this.submitData)
-        : await updateCustomer(this.submitData);
+      const res = await postDetailAdd(this.submitData);
       if (res.code == 200) {
         this.$message({
           message: "操作成功",

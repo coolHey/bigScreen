@@ -17,21 +17,27 @@
         <p>发生次数</p>
         <div class="c1" id="c1" ref="c1"></div>
       </div>
-      <div class="bzt">
+      <!-- <div class="bzt">
         <div class="box">
           <div class="c2" id="c2" ref="c2"></div>
           <div class="desc">
             <p>
               <span class="label">未处理数：</span>
-              <span class="num">0</span>
+              <span class="num">{{
+                monitorErrorHandleState?.errorHandle?.errorNoSolve || 0
+              }}</span>
             </p>
             <p>
               <span class="label">已处理数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState?.errorHandle?.errorSolved || 0
+              }}</span>
             </p>
             <p>
               <span class="label">异常总数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState?.errorHandle?.errorTotal || 0
+              }}</span>
             </p>
           </div>
         </div>
@@ -40,19 +46,25 @@
           <div class="desc">
             <p>
               <span class="label">未处理数：</span>
-              <span class="num">0</span>
+              <span class="num">{{
+                monitorErrorHandleState?.remoteHandle?.errorNoSolve || 0
+              }}</span>
             </p>
             <p>
               <span class="label">已处理数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState?.remoteHandle?.errorSolved || 0
+              }}</span>
             </p>
             <p>
               <span class="label">异常总数：</span>
-              <span class="num">24</span>
+              <span class="num">{{
+                monitorErrorHandleState?.remoteHandle?.errorTotal || 0
+              }}</span>
             </p>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -76,10 +88,24 @@ export default {
       return this.data.monitorErrorHandleState || {};
     },
   },
+
+  watch: {
+    data: {
+      handler(oldVal, newVal) {
+        this.initChart1();
+        // this.initChart2();
+        // this.initChart3();
+      },
+      deep: true,
+    },
+  },
+
   mounted() {
-    this.initChart1();
-    this.initChart2();
-    this.initChart3();
+    this.$nextTick(() => {
+      this.initChart1();
+      // this.initChart2();
+      // this.initChart3();
+    });
   },
   methods: {
     initChart1() {
@@ -152,161 +178,162 @@ export default {
       this.myChart = echarts.init(this.$refs.c1);
       this.myChart.setOption(option);
     },
-    initChart2() {
-      const { errorHandle = {} } = this.monitorErrorHandleState;
-      let option = {
-        tooltip: {
-          trigger: "item",
-        },
-        legend: {
-          left: "left",
-        },
-        title: {
-          left: "center",
-          textStyle: {
-            fontSize: 16,
-            color: "#e7b53e",
-          },
-          subtextStyle: {
-            color: "#e7b53e",
-          },
-        },
-        series: [
-          {
-            name: "设备实时在线率",
-            type: "pie",
-            radius: ["60%", "90%"],
-            avoidLabelOverlap: false,
-            // top: '10%',
-            hoverAnimation: false,
-            label: {
-              show: false,
-              position: "center",
-            },
-            emphasis: {
-              label: {
-                show: false,
-                fontSize: 10,
-                fontWeight: "bold",
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: [
-              {
-                // 数据值
-                value: errorHandle?.["errorSolved"],
-                // 数据项名称
-                //该数据项是否被选中
-                selected: false,
-                // 单个扇区的标签配置
-                label: {
-                  normal: {
-                    // 是显示标签
-                    show: true,
-                    position: "center",
-                    fontSize: 10,
-                    // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
-                    formatter: "{d}%",
-                  },
-                },
-                itemStyle: { color: "#76f89b" },
-              },
-              {
-                value: errorHandle?.["errorNoSolve"],
-                itemStyle: { color: "#f2f2f2" },
-                label: {
-                  normal: {
-                    show: false,
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      };
-      this.myChart = echarts.init(this.$refs.c2);
-      this.myChart.setOption(option);
-    },
-    initChart3() {
-      const { remoteHandle = {} } = this.monitorErrorHandleState;
-      let option = {
-        tooltip: {
-          trigger: "item",
-        },
-        legend: {
-          left: "left",
-        },
-        title: {
-          left: "center",
-          textStyle: {
-            fontSize: 16,
-            color: "#e7b53e",
-          },
-          subtextStyle: {
-            color: "#e7b53e",
-          },
-        },
-        series: [
-          {
-            name: "设备实时在线率",
-            type: "pie",
-            radius: ["60%", "90%"],
-            avoidLabelOverlap: false,
-            // top: '10%',
-            hoverAnimation: false,
-            label: {
-              show: false,
-              position: "center",
-            },
-            emphasis: {
-              label: {
-                show: false,
-                fontSize: 10,
-                fontWeight: "bold",
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: [
-              {
-                // 数据值
-                value: remoteHandle?.["errorSolved"],
-                // 数据项名称
-                //该数据项是否被选中
-                selected: false,
-                // 单个扇区的标签配置
-                label: {
-                  normal: {
-                    // 是显示标签
-                    show: true,
-                    position: "center",
-                    fontSize: 10,
-                    // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
-                    formatter: "远程处理率\n\n{d}%",
-                    color: "#fff",
-                  },
-                },
-                itemStyle: { color: "#e8ec6b" },
-              },
-              {
-                value: remoteHandle?.["errorNoSolve"],
-                itemStyle: { color: "#f2f2f2" },
-                label: {
-                  normal: {
-                    show: false,
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      };
-      this.myChart = echarts.init(this.$refs.c3);
-      this.myChart.setOption(option);
-    },
+    // initChart2() {
+    //   const { errorHandle = {} } = this.monitorErrorHandleState;
+    //   let option = {
+    //     tooltip: {
+    //       trigger: "item",
+    //     },
+    //     legend: {
+    //       left: "left",
+    //     },
+    //     title: {
+    //       left: "center",
+    //       textStyle: {
+    //         fontSize: 16,
+    //         color: "#e7b53e",
+    //       },
+    //       subtextStyle: {
+    //         color: "#e7b53e",
+    //       },
+    //     },
+    //     series: [
+    //       {
+    //         name: "设备实时在线率",
+    //         type: "pie",
+    //         radius: ["60%", "90%"],
+    //         avoidLabelOverlap: false,
+    //         // top: '10%',
+    //         hoverAnimation: false,
+    //         label: {
+    //           show: false,
+    //           position: "center",
+    //         },
+    //         emphasis: {
+    //           label: {
+    //             show: false,
+    //             fontSize: 10,
+    //             fontWeight: "bold",
+    //           },
+    //         },
+    //         labelLine: {
+    //           show: false,
+    //         },
+    //         data: [
+    //           {
+    //             // 数据值
+    //             value: errorHandle?.["errorSolved"],
+    //             // 数据项名称
+    //             //该数据项是否被选中
+    //             selected: false,
+    //             // 单个扇区的标签配置
+    //             label: {
+    //               normal: {
+    //                 // 是显示标签
+    //                 show: true,
+    //                 position: "center",
+    //                 fontSize: 10,
+    //                 // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
+    //                 formatter: "异常处理率\n\n{d}%",
+    //                 color: "#fff",
+    //               },
+    //             },
+    //             itemStyle: { color: "#e8ec6b" },
+    //           },
+    //           {
+    //             value: errorHandle?.["errorNoSolve"],
+    //             itemStyle: { color: "#f2f2f2" },
+    //             label: {
+    //               normal: {
+    //                 show: false,
+    //               },
+    //             },
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   };
+    //   this.myChart = echarts.init(this.$refs.c2);
+    //   this.myChart.setOption(option);
+    // },
+    // initChart3() {
+    //   const { remoteHandle = {} } = this.monitorErrorHandleState;
+    //   let option = {
+    //     tooltip: {
+    //       trigger: "item",
+    //     },
+    //     legend: {
+    //       left: "left",
+    //     },
+    //     title: {
+    //       left: "center",
+    //       textStyle: {
+    //         fontSize: 16,
+    //         color: "#e7b53e",
+    //       },
+    //       subtextStyle: {
+    //         color: "#e7b53e",
+    //       },
+    //     },
+    //     series: [
+    //       {
+    //         name: "设备实时在线率",
+    //         type: "pie",
+    //         radius: ["60%", "90%"],
+    //         avoidLabelOverlap: false,
+    //         // top: '10%',
+    //         hoverAnimation: false,
+    //         label: {
+    //           show: false,
+    //           position: "center",
+    //         },
+    //         emphasis: {
+    //           label: {
+    //             show: false,
+    //             fontSize: 10,
+    //             fontWeight: "bold",
+    //           },
+    //         },
+    //         labelLine: {
+    //           show: false,
+    //         },
+    //         data: [
+    //           {
+    //             // 数据值
+    //             value: remoteHandle?.["errorSolved"],
+    //             // 数据项名称
+    //             //该数据项是否被选中
+    //             selected: false,
+    //             // 单个扇区的标签配置
+    //             label: {
+    //               normal: {
+    //                 // 是显示标签
+    //                 show: true,
+    //                 position: "center",
+    //                 fontSize: 10,
+    //                 // 标签内容格式器，支持字符串模板和回调函数两种形式，字符串模板与回调函数返回的字符串均支持用 \n 换行
+    //                 formatter: "远程处理率\n\n{d}%",
+    //                 color: "#fff",
+    //               },
+    //             },
+    //             itemStyle: { color: "#e8ec6b" },
+    //           },
+    //           {
+    //             value: remoteHandle?.["errorNoSolve"],
+    //             itemStyle: { color: "#f2f2f2" },
+    //             label: {
+    //               normal: {
+    //                 show: false,
+    //               },
+    //             },
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   };
+    //   this.myChart = echarts.init(this.$refs.c3);
+    //   this.myChart.setOption(option);
+    // },
   },
 };
 </script>
@@ -377,49 +404,49 @@ export default {
       }
     }
 
-    .bzt {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      margin-top: vh(8);
+    // .bzt {
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: center;
+    //   width: 100%;
+    //   margin-top: vh(8);
 
-      .box {
-        width: vw(310);
-        height: vh(140);
-        // background: #074281;
-        border-radius: vw(4);
-        display: flex;
-        align-items: center;
+    //   .box {
+    //     width: vw(310);
+    //     height: vh(140);
+    //     // background: #074281;
+    //     border-radius: vw(4);
+    //     display: flex;
+    //     align-items: center;
 
-        &:first-child {
-          margin-right: vw(13);
-        }
+    //     &:first-child {
+    //       margin-right: vw(13);
+    //     }
 
-        .c2,
-        .c3 {
-          width: vw(155);
-          height: 100%;
-        }
+    //     .c2,
+    //     .c3 {
+    //       width: vw(155);
+    //       height: 100%;
+    //     }
 
-        .desc {
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
+    //     .desc {
+    //       display: flex;
+    //       flex-direction: column;
+    //       justify-content: flex-start;
 
-          .label {
-            color: #56a4ed;
-            font-size: vw(16);
-          }
+    //       .label {
+    //         color: #56a4ed;
+    //         font-size: vw(16);
+    //       }
 
-          .num {
-            color: #a7d0f6;
-            font-size: vw(24);
-            font-weight: normal;
-          }
-        }
-      }
-    }
+    //       .num {
+    //         color: #a7d0f6;
+    //         font-size: vw(24);
+    //         font-weight: normal;
+    //       }
+    //     }
+    //   }
+    // }
   }
 }
 </style>

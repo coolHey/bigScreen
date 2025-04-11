@@ -21,13 +21,13 @@ form {
   padding: 0;
 }
 
-@font-face {
+/* @font-face {
   font-family: 'MyCustomFont';
   src: url('../fontFile.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 body {
   font-family: 'MyCustomFont', sans-serif;

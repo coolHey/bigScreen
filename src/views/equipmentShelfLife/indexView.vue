@@ -3,23 +3,27 @@
     <div class="filter">
       <ul>
         <li>
-          <span class="label">设备ID：</span>
-          <input type="text" v-model="filterData.id" placeholder="请输入" class="inp" />
+          <span class="label">出厂编号</span>
+          <input
+            type="text"
+            v-model="filterData.factoryId"
+            placeholder="请输入"
+            class="inp"
+          />
         </li>
-        <li>
+        <!-- <li>
           <span class="label">质保日期：</span>
           <div class="datePick">
-            <el-date-picker
-              v-model="filterData.warrantyDate"
-              type="datetime"
-              placeholder="选择日期时间"
-              value-format="YYYY-MM-DD HH:mm:ss"
-            >
+            <el-date-picker v-model="filterData.warrantyDate" type="datetime" placeholder="选择日期时间"
+              value-format="YYYY-MM-DD HH:mm:ss">
             </el-date-picker>
           </div>
-        </li>
+        </li> -->
         <li>
-          <button class="btn" @click="handleQuery">查询</button>
+          <button class="btn" @click="handleQuery()">查询</button>
+          <button class="btn" @click="handleQuery(1)">一个月</button>
+          <button class="btn" @click="handleQuery(2)">两个月</button>
+          <button class="btn" @click="handleQuery(0)">已到期</button>
           <button class="btn" @click="handleReset">重置</button>
         </li>
       </ul>
@@ -68,7 +72,9 @@
             <el-button @click="handleEdit(scope.row)" type="text" size="small"
               >编辑
             </el-button>
-            <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
+            <!-- <el-button type="text" size="small" @click="handleDelete(scope.row)"
+              >删除</el-button
+            > -->
           </template>
         </el-table-column>
       </el-table>
@@ -96,7 +102,7 @@
 
 <script>
 import addEquipmentView from "./addEquipment.vue";
-import { getListData, deleteShelfLife } from '@/api/shelfLife'
+import { getListData } from "@/api/shelfLife";
 export default {
   components: {
     addEquipmentView,
@@ -111,61 +117,65 @@ export default {
         pn: 1,
         size: 10,
         total: 0,
-        id: '',
-        warrantyDate: ''
+        factoryId: "",
+        warrantyStatus: "",
       },
-      updateData: {}
+      updateData: {},
     };
   },
-  mounted () {
-    this.getList()
+  mounted() {
+    this.getList();
   },
   methods: {
     // 获取数据
     getList() {
-      getListData(this.filterData).then(res => {
+      getListData(this.filterData).then((res) => {
         if (res.code == 200) {
-          this.tableData = res.data.records
-          this.filterData.total = res.data.total
-          this.filterData.pn = res.data.current
+          this.tableData = res.data.records;
+          this.filterData.total = res.data.total;
+          this.filterData.pn = res.data.current;
         } else {
           this.$message({
-            message: '获取数据失败',
-            type: 'warning'
+            message: "获取数据失败",
+            type: "warning",
           });
+          this.tableData = [];
+          this.filterData.total = 0;
+          this.filterData.pn = 1;
         }
-      })
+      });
     },
 
     // 删除设备
-    handleDelete(row) {
-      alert('功能暂未开放')
-      return
-      deleteShelfLife({ id: row.id }).then(res => {
-        console.log(res);
-        if (res.code == 200) {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          });
-          this.getList()
-        } else {
-          this.$message({
-            message: '删除失败',
-            type: 'warning'
-          });
-        }
-      })
+    // handleDelete(row) {
+    //   alert("功能暂未开放");
+    //   return;
+    //   deleteShelfLife({ id: row.id }).then((res) => {
+    //     console.log(res);
+    //     if (res.code == 200) {
+    //       this.$message({
+    //         message: "删除成功",
+    //         type: "success",
+    //       });
+    //       this.getList();
+    //     } else {
+    //       this.$message({
+    //         message: "删除失败",
+    //         type: "warning",
+    //       });
+    //     }
+    //   });
+    // },
+
+    handleQuery(status) {
+      this.filterData.warrantyStatus = status;
+      this.getList();
     },
 
-    handleQuery() {
-      this.getList()
-    },
-    
     // 重置搜索条件
     handleReset() {
-      this.filterData.id = ''
-      this.filterData.warrantyDate = ''
+      this.filterData.factoryId = "";
+      this.handleQuery();
     },
     onSubmit() {
       console.log("submit!");
@@ -174,19 +184,19 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      this.filterData.pn = val
-      this.getList()
+      this.filterData.pn = val;
+      this.getList();
     },
     handleEdit(row) {
-      this.updateData = row
-      this.showAdd = true
+      this.updateData = row;
+      this.showAdd = true;
     },
     closeDialog(idx) {
       console.log(idx, 111);
       this.showAdd = false;
-      this.filterData.pn = 1
-      this.filterData.size = 10
-      this.getList()
+      this.filterData.pn = 1;
+      this.filterData.size = 10;
+      this.getList();
     },
   },
 };
@@ -196,18 +206,22 @@ export default {
 .container {
   padding: vh(35) vw(80) vh(64) vw(80);
   position: relative;
+
   .filter {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     ul {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+
       li {
         display: flex;
         align-items: center;
         margin-right: vw(32);
+
         .label {
           font-weight: 400;
           font-size: vw(16);
@@ -230,14 +244,17 @@ export default {
           font-style: normal;
           padding: vh(8) vh(12);
         }
+
         .datePick {
           width: vw(245);
           height: vh(38);
+
           :deep(.el-input) {
             width: 100%;
             height: 100%;
             border: none;
             background: rgba(0, 112, 255, 0.1);
+
             .el-input__wrapper {
               background: rgba(0, 112, 255, 0.1);
               box-shadow: inset 0px 0px vh(8) 0px rgba(0, 130, 255, 0.32);
@@ -251,6 +268,7 @@ export default {
             }
           }
         }
+
         .btn {
           width: vw(72);
           height: vh(38);
@@ -278,6 +296,7 @@ export default {
         }
       }
     }
+
     .addBtn {
       background: url(../../assets/image/add_bg.png) top left no-repeat;
       background-size: 100% auto;
@@ -291,18 +310,23 @@ export default {
       font-style: normal;
     }
   }
+
   .tableBox {
     width: vw(1760);
     height: vh(700);
     margin-top: vh(22);
+
     :deep(.el-table) {
       background-color: transparent;
+
       .el-table__inner-wrapper {
         &::before {
           content: none;
         }
+
         .el-table__header {
           backdrop-filter: blur(2px);
+
           thead {
             tr {
               background: linear-gradient(
@@ -312,9 +336,11 @@ export default {
                 rgba(0, 109, 255, 0) 100%
               );
               backdrop-filter: blur(2px);
+
               th {
                 background: transparent;
                 border: none;
+
                 .cell {
                   background: transparent;
                   font-weight: 600;
@@ -327,13 +353,17 @@ export default {
             }
           }
         }
+
         .el-table__body-wrapper {
           margin-top: vh(12);
           background: transparent;
+
           .el-table__body {
             background-color: transparent;
+
             tbody {
               overflow: hidden;
+
               .el-table__row {
                 &:nth-child(odd) {
                   background: linear-gradient(
@@ -343,6 +373,7 @@ export default {
                     rgba(0, 109, 255, 0) 100%
                   );
                 }
+
                 &:nth-child(even) {
                   background: linear-gradient(
                     270deg,
@@ -351,11 +382,14 @@ export default {
                     rgba(0, 109, 255, 0) 100%
                   );
                 }
+
                 backdrop-filter: blur(2px);
                 margin-bottom: vh(8);
+
                 td {
                   background: transparent;
                   border: none;
+
                   .cell {
                     min-height: vh(60);
                     font-weight: 400;
@@ -372,10 +406,12 @@ export default {
       }
     }
   }
+
   .paginationBox {
     margin-top: vh(100);
     display: flex;
     justify-content: flex-end;
+
     :deep(.el-pagination) {
       .el-pagination__total {
         font-weight: 600;
@@ -383,10 +419,12 @@ export default {
         color: #90b9ff;
         font-style: normal;
       }
+
       .btn-prev {
         width: vw(32);
         height: vh(32);
         background: rgba(0, 93, 196, 0.2);
+
         &::before {
           content: "";
           background: url(../../assets/image/prev.png) top left no-repeat;
@@ -394,14 +432,17 @@ export default {
           width: vw(10);
           height: vh(10);
         }
+
         .el-icon {
           display: none;
         }
       }
+
       .btn-next {
         width: vw(32);
         height: vh(32);
         background: rgba(0, 93, 196, 0.2);
+
         &::before {
           content: "";
           background: url(../../assets/image/next.png) top left no-repeat;
@@ -409,10 +450,12 @@ export default {
           width: vw(10);
           height: vh(10);
         }
+
         .el-icon {
           display: none;
         }
       }
+
       .el-pager {
         li {
           width: vw(32);
@@ -422,6 +465,7 @@ export default {
           font-size: vw(14);
           color: #fff;
           font-style: normal;
+
           &.is-active {
             background: linear-gradient(
               270deg,

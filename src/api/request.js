@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "../router";
 
 const service = axios.create({
   baseURL: process.env.NODE_ENV === "development" ? "/api" : "http://146.56.215.178:9999",
@@ -21,6 +22,10 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response) => {
+    if (response.data.code == 402) {
+      window.localStorage.removeItem('token')
+      router.push('/login')
+    }
     return response.data;
   },
   (error) => {

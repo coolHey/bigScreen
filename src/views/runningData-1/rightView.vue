@@ -1,19 +1,22 @@
 <template>
   <div class="leftView">
-    <div class="title">离心机参数</div>
+    <div class="title">
+      <span>干燥机参数</span>
+      <span>{{ time }}</span>
+    </div>
     <div class="content3 content">
       <ul>
         <li>
           <span>运行速度</span>
-          <span>{{data.v1 || '-'}}</span>
+          <span>{{ data.d1 || "-" }}</span>
         </li>
         <li>
           <span>真空度</span>
-          <span>{{data.v2 || '-'}}</span>
+          <span>{{ data.d2 || "-" }}</span>
         </li>
         <li>
           <span>压力</span>
-          <span>{{data.v3 || '-'}}</span>
+          <span>{{ data.d3 || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -21,11 +24,11 @@
       <ul>
         <li>
           <span>震动/流量</span>
-          <span>{{data.v4 || '-'}}</span>
+          <span>{{ data.d4 || "-" }}</span>
         </li>
         <li>
           <span>热源温度</span>
-          <span>{{data.v8 || '-'}}</span>
+          <span>{{ data.d8 || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -33,15 +36,15 @@
       <ul>
         <li>
           <span>输出电压</span>
-          <span>{{data.v5 || '-'}}</span>
+          <span>{{ data.d5 || "-" }}</span>
         </li>
         <li>
           <span>输出电流</span>
-          <span>{{data.v6 || '-'}}</span>
+          <span>{{ data.d6 || "-" }}</span>
         </li>
         <li>
           <span>腔体温度</span>
-          <span>{{data.v7 || '-'}}</span>
+          <span>{{ data.d7 || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -49,11 +52,11 @@
       <ul>
         <li>
           <span>真空上料</span>
-          <span>{{data.v9 || '-'}}</span>
+          <span>{{ data.d9 || "-" }}</span>
         </li>
         <li>
           <span>螺旋输送</span>
-          <span>{{data.v10 || '-'}}</span>
+          <span>{{ data.d10 || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -79,6 +82,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    time: {
+      type: String,
+      default: "--",
+    },
   },
 };
 </script>
@@ -98,6 +105,12 @@ export default {
     letter-spacing: vw(2);
     font-style: normal;
     padding-left: vw(40);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span:nth-child(2) {
+      font-size: vw(18);
+    }
   }
   .content {
     margin-top: vh(19);

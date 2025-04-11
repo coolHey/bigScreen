@@ -7,9 +7,18 @@
           <li>
             <div class="label">省：</div>
             <div class="elSelect small">
-              <el-select v-model="submitData.province" collapse-tags placeholder="请选择" @change="provinceChange">
-                <el-option v-for="item in provincesList" :key="item.provinceId" :label="item.province"
-                  :value="item.provinceId">
+              <el-select
+                v-model="submitData.province"
+                collapse-tags
+                placeholder="请选择"
+                @change="provinceChange"
+              >
+                <el-option
+                  v-for="item in provincesList"
+                  :key="item.provinceId"
+                  :label="item.province"
+                  :value="item.provinceId"
+                >
                 </el-option>
               </el-select>
             </div>
@@ -17,8 +26,18 @@
           <li>
             <div class="label">市</div>
             <div class="elSelect small">
-              <el-select v-model="submitData.city" collapse-tags placeholder="请选择" @change="cityChange">
-                <el-option v-for="item in citiesList" :key="item.cityId" :label="item.city" :value="item.cityId">
+              <el-select
+                v-model="submitData.city"
+                collapse-tags
+                placeholder="请选择"
+                @change="cityChange"
+              >
+                <el-option
+                  v-for="item in citiesList"
+                  :key="item.cityId"
+                  :label="item.city"
+                  :value="item.cityId"
+                >
                 </el-option>
               </el-select>
             </div>
@@ -26,8 +45,17 @@
           <li>
             <div class="label">区/县</div>
             <div class="elSelect small">
-              <el-select v-model="submitData.district" collapse-tags placeholder="请选择">
-                <el-option v-for="item in areasList" :key="item.areaId" :label="item.area" :value="item.areaId">
+              <el-select
+                v-model="submitData.district"
+                collapse-tags
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in areasList"
+                  :key="item.areaId"
+                  :label="item.area"
+                  :value="item.areaId"
+                >
                 </el-option>
               </el-select>
             </div>
@@ -53,11 +81,25 @@
           </li> -->
           <li>
             <div class="label">设备型号：</div>
-            <input type="text" v-model="submitData.type" name="" id="" class="inp" placeholder="请输入" />
+            <input
+              type="text"
+              v-model="submitData.type"
+              name=""
+              id=""
+              class="inp"
+              placeholder="请输入"
+            />
           </li>
           <li>
             <div class="label">出厂编号：</div>
-            <input type="text" v-model="submitData.factoryId" name="" id="" class="inp" placeholder="请输入" />
+            <input
+              type="text"
+              v-model="submitData.factoryId"
+              name=""
+              id=""
+              class="inp"
+              placeholder="请输入"
+            />
           </li>
           <!-- <li>
             <div class="label">出厂编号：</div>
@@ -81,8 +123,12 @@
           <li>
             <div class="label">出厂日期</div>
             <div class="datePick">
-              <el-date-picker v-model="submitData.factoryDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期时间">
+              <el-date-picker
+                v-model="submitData.factoryDate"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间"
+              >
               </el-date-picker>
               <!-- <el-date-picker
                 v-model="value2"
@@ -97,29 +143,58 @@
           <li>
             <div class="label">调试日期：</div>
             <div class="datePick">
-              <el-date-picker v-model="submitData.debugDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期时间">
+              <el-date-picker
+                v-model="submitData.debugDate"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间"
+              >
               </el-date-picker>
             </div>
           </li>
           <li>
             <div class="label">客户名称：</div>
-            <input type="text" v-model="submitData.client" name="" id="" class="inp" placeholder="请输入" />
+            <input
+              type="text"
+              v-model="submitData.client"
+              name=""
+              id=""
+              class="inp"
+              placeholder="请输入"
+            />
           </li>
           <li>
             <div class="label">设备ID：</div>
-            <input type="text" v-model="submitData.id" :disabled="data.id" name="" id="" class="inp"
-              placeholder="请输入" />
+            <input
+              type="text"
+              v-model="submitData.id"
+              :disabled="data.id"
+              name=""
+              id=""
+              class="inp"
+              placeholder="请输入"
+            />
           </li>
           <li>
             <div class="label">质保期：</div>
-            <input type="text" v-model="submitData.warrantySpan" name="" id="" class="inp" placeholder="请输入" />
+            <input
+              type="text"
+              v-model="submitData.warrantySpan"
+              name=""
+              id=""
+              class="inp"
+              placeholder="请输入"
+            />
           </li>
           <li>
             <div class="label">质保到期日</div>
             <div class="datePick">
-              <el-date-picker v-model="submitData.warrantyDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期时间">
+              <el-date-picker
+                v-model="submitData.warrantyDate"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间"
+              >
               </el-date-picker>
             </div>
           </li>
@@ -134,12 +209,18 @@
 </template>
 
 <script>
-import { getProvinces, getCities, getAreas, addDevice, upDateDevice } from '@/api/device';
+import {
+  getProvinces,
+  getCities,
+  getAreas,
+  addDevice,
+  upDateDevice,
+} from "@/api/device";
 export default {
   props: {
     data: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
   },
 
@@ -152,72 +233,72 @@ export default {
       citiesList: [],
       areasList: [],
       submitData: {
-        id: '', // 设备id
-        client: '', //客户名称
-        type: '', //设备型号
-        province: '', //省
-        city: '', //市
-        district: '', //区
-        factoryId: '', //出厂编号
-        factoryDate: '', //出厂日期
-        debugDate: '', //调试日期
-        warrantyDate: '', //设备到期日
-        warrantySpan: '', //质保期
-      }
+        id: "", // 设备id
+        client: "", //客户名称
+        type: "", //设备型号
+        province: "", //省
+        city: "", //市
+        district: "", //区
+        factoryId: "", //出厂编号
+        factoryDate: "", //出厂日期
+        debugDate: "", //调试日期
+        warrantyDate: "", //设备到期日
+        warrantySpan: "", //质保期
+      },
     };
   },
 
   mounted() {
     if (this.data.id) {
-      Object.assign(this.submitData, this.data)
+      Object.assign(this.submitData, this.data);
     }
-    this.submitData.id = this.data.id
-    this.getProvincesList()
+    this.submitData.id = this.data.id;
+    this.getProvincesList();
   },
 
   methods: {
     doSubmit(idx) {
       if (idx == 2) {
-        let check = false
-        for (const [key, value] of Object.entries(this.submitData)) {
+        let check = false;
+        for (const [key] of Object.entries(this.submitData)) {
           if (!this.submitData[key]) {
-            check = true
+            check = true;
           }
         }
         if (check) {
-          alert('请填写完整内容')
-          return
+          alert("请填写完整内容");
+          return;
         }
         if (this.data.id) {
-          upDateDevice(this.submitData).then(res => {
+          upDateDevice(this.submitData).then((res) => {
             if (res.code == 200) {
               this.$emit("doSubmit", idx);
               this.$message({
-                message: '操作成功',
-                type: 'success'
-              })
+                message: "操作成功",
+                type: "success",
+              });
             } else {
               this.$message({
                 message: res.message,
-                type: 'warning'
-              })
+                type: "warning",
+              });
             }
-          })
+          });
         } else {
-          addDevice(this.submitData).then(res => {
+          addDevice(this.submitData).then((res) => {
             if (res.code == 200) {
               this.$emit("doSubmit", idx);
               this.$message({
-                message: '操作成功',
-                type: 'success'
-              })
+                message: "操作成功",
+                type: "success",
+              });
             } else {
               this.$message({
                 message: res.message,
-                type: 'warning'
-              })
+                type: "warning",
+              });
             }
-          })
+          });
         }
       } else {
         this.$emit("doSubmit", idx);
@@ -225,30 +306,35 @@ export default {
     },
     // 省
     getProvincesList() {
-      getProvinces().then(res => {
+      getProvinces().then((res) => {
         if (res.code == 200) {
-          this.provincesList = res.data
+          this.provincesList = res.data;
+        } else {
+          alert(res.message);
         }
-      })
+      });
     },
 
     provinceChange() {
-      getCities({ provinceId: this.submitData.province }).then(res => {
+      getCities({ provinceId: this.submitData.province }).then((res) => {
         if (res.code == 200) {
-          this.citiesList = res.data
+          this.citiesList = res.data;
+        } else {
+          alert(res.message);
         }
-      })
+      });
     },
 
     cityChange() {
-      getAreas({ cityId: this.submitData.city }).then(res => {
+      getAreas({ cityId: this.submitData.city }).then((res) => {
         console.log(res);
         if (res.code == 200) {
-          this.areasList = res.data
+          this.areasList = res.data;
+        } else {
+          alert(res.message);
         }
-      })
+      });
     },
-
   },
 };
 </script>
@@ -353,7 +439,8 @@ export default {
               .el-input__wrapper {
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left
+                  no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;

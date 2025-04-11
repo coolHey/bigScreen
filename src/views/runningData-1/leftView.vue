@@ -1,59 +1,62 @@
 <template>
   <div class="leftView">
-    <div class="title">离心机参数</div>
+    <div class="title">
+      <span>干燥机参数</span>
+      <span>{{ data.createTime }}</span>
+    </div>
     <div class="content3 content">
       <ul>
         <li>
           <span>运行模式</span>
-          <span>{{data.k1 || '-'}}</span>
+          <span>{{ data.d1 || "-" }}</span>
         </li>
         <li>
           <span>运行速度</span>
-          <span>{{data.k2 || '-'}}</span>
+          <span>{{ data.d2 || "-" }}</span>
         </li>
         <li>
-          <span>运行频率</span>
-          <span>{{data.k3 || '-'}}</span>
+          <span>主机频率</span>
+          <span>{{ data.d3 || "-" }}</span>
         </li>
       </ul>
     </div>
     <div class="content2 content">
       <ul>
         <li>
-          <span>氮气</span>
-          <span>{{data.k4 || '-'}}</span>
+          <span>主机电流</span>
+          <span>{{ data.d4 || "-" }}</span>
         </li>
         <li>
-          <span>震动值</span>
-          <span>{{data.k8 || '-'}}</span>
+          <span>含氧量</span>
+          <span>{{ data.d5 || "-" }}</span>
         </li>
       </ul>
     </div>
     <div class="content3 content">
       <ul>
         <li>
-          <span>输出电压</span>
-          <span>{{data.k5 || '-'}}</span>
+          <span>振动值</span>
+          <span>{{ data.d6 || "-" }}</span>
         </li>
         <li>
-          <span>输出电流</span>
-          <span>{{data.k6 || '-'}}</span>
+          <span>主机转速</span>
+          <span>{{ data.d7 || "-" }}</span>
         </li>
         <li>
-          <span>输出功率</span>
-          <span>{{data.k7 || '-'}}</span>
+          <span>布料频率</span>
+          <span>{{ data.d8 || "-" }}</span>
         </li>
       </ul>
     </div>
     <div class="content2 content">
       <ul>
         <li>
-          <span>真空上料</span>
-          <span>{{data.k9 || '-'}}</span>
+          <span>布料电流</span>
+          <span>{{ data.d9 || "-" }}</span>
         </li>
         <li>
-          <span>螺旋输送</span>
-          <span>{{data.k10 || '-'}}</span>
+          <span>暂定</span>
+          <span>{{ data.d10 || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -98,6 +101,12 @@ export default {
     letter-spacing: vw(2);
     font-style: normal;
     padding-left: vw(40);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span:nth-child(2) {
+      font-size: vw(18);
+    }
   }
   .content {
     margin-top: vh(19);

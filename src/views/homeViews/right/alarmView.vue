@@ -6,18 +6,15 @@
     </div>
     <div class="alarmList">
       <ul>
-        <li
-          :class="{
+        <!-- :class="{
             alarmFault: item.status === 4,
             // alarmTime: idx === 1,
             alarmNotice: item.status === 3,
-          }"
-          v-for="(item, idx) in monitorWarnState"
-          :key="idx"
-        >
+          }" -->
+        <li class="alarmFault" v-for="(item, idx) in monitorFaults" :key="idx">
           <div class="alarmItem">
             <p>{{ item.monitorId }}</p>
-            <p>{{ item.msg.msg }}</p>
+            <p>{{ item.analysis }}</p>
             <p>{{ item.errorTime }}</p>
           </div>
         </li>
@@ -35,8 +32,8 @@ export default {
     },
   },
   computed: {
-    monitorWarnState() {
-      return this.data?.monitorWarnState || [];
+    monitorFaults() {
+      return this.data?.monitorFaults || [];
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="time">{{ timeDate }}</div>
-    <h2 class="title">{{ name }}</h2>
+    <h2 class="title">{{ this.$route.meta.title || name }}</h2>
   </div>
 </template>
 
@@ -19,12 +19,18 @@ export default {
       timeDate: null,
     };
   },
+  
   created() {
     this.timeDate = this.getDate();
     this.timer = setInterval(() => {
       this.timeDate = this.getDate();
     }, 1000);
   },
+
+  mounted() {
+    console.log(this.$route);
+  },
+
   methods: {
     getDate() {
       let y = new Date().getFullYear();

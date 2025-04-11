@@ -36,10 +36,11 @@
           align="center"
           label="设备ID"
           show-overflow-tooltip
-        >
+        ></el-table-column>
+        <el-table-column align="center" label="事宜" show-overflow-tooltip>
           <template #default="scope">
             <div @click="getCurrentScope(scope)">
-              <span>{{ scope.row.msg.msgTime }}</span>
+              <span>{{ scope.row.remindTime }}</span>
               <span class="warning"> 需要维保，请及时处理</span>
             </div>
           </template>
@@ -51,13 +52,13 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="runCount"
+          prop="maintainCount"
           align="center"
-          label="运行次数"
+          label="维保次数"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="msg.msgTime"
+          prop="remindTime"
           align="center"
           label="提醒时间"
           show-overflow-tooltip
@@ -65,7 +66,7 @@
         <el-table-column align="center" label="操作">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
-              >提醒
+              >编辑
             </el-button>
           </template>
         </el-table-column>
@@ -83,16 +84,22 @@
       >
       </el-pagination>
     </div>
+    <EditMaintenance
+      v-if="showEdit"
+      :updateData="editData"
+      @doSubmit="showEdit = false & getData()"
+    />
   </div>
 </template>
 
 <script>
-import { getMaintainData, postNotice } from "@/api/afterSales";
+import { getMaintainData } from "@/api/afterSales";
 import { download } from "@/utils/download";
-import { ElMessage } from "element-plus";
 import QueryString from "qs";
+import EditMaintenance from "./editMaintenance.vue";
 
 export default {
+  components: { EditMaintenance },
   data() {
     return {
       tableData: [],
@@ -104,6 +111,8 @@ export default {
         size: 10,
       },
       total: 0,
+      showEdit: false,
+      editData: {},
     };
   },
   mounted() {
@@ -132,12 +141,10 @@ export default {
       );
     },
     async handleClick(row) {
-      const res = await postNotice(row.id);
-      if (res.code === 200) {
-        ElMessage.success("提醒成功");
-      } else {
-        ElMessage.error(res.message);
-      }
+      this.editData = {
+        ...row,
+      };
+      this.showEdit = true;
     },
     handleSizeChange(val) {
       this.pagination.size = val;

@@ -12,17 +12,13 @@
           />
         </li>
         <li>
-          <span class="label">质保日期：</span>
-          <div class="datePick">
-            <el-date-picker
-              format="YYYY-MM-DD HH:mm:ss"
-              value-format="YYYY-MM-DD HH:mm:ss"
-              v-model="form.soldTime"
-              type="datetime"
-              placeholder="选择日期时间"
-            >
-            </el-date-picker>
-          </div>
+          <span class="label">客户名称：</span>
+          <input
+            type="text"
+            placeholder="请输入"
+            class="inp"
+            v-model="form.clientName"
+          />
         </li>
         <li>
           <button class="btn" @click="doSearch">查询</button>
@@ -46,25 +42,18 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="soldTime"
+          prop="clientName"
           align="center"
-          label="维修时间"
+          label="客户"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column
-          prop="soldPeople"
-          align="center"
-          label="维修人员"
-          show-overflow-tooltip
-        ></el-table-column>
-        <!-- <el-table-column prop="address" align="center" label="操作">
+        <el-table-column align="center" label="操作">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
-              >编辑
+              >详情
             </el-button>
-            <el-button type="text" size="small">删除</el-button>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
     </div>
     <div class="paginationBox">
@@ -93,7 +82,7 @@ export default {
       tableData: [],
       form: {
         monitorId: undefined,
-        soldTime: undefined,
+        clientName: undefined,
       },
       pagination: {
         pn: 1,
@@ -127,9 +116,14 @@ export default {
           })
       );
     },
-    // async handleClick(row) {
-
-    // },
+    async handleClick(row) {
+      this.$router.push({
+        name: "equipmentServiceDetail",
+        query: {
+          monitorId: row.monitorId,
+        },
+      });
+    },
     handleSizeChange(val) {
       this.pagination.size = val;
       this.getData();

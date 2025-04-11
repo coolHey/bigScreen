@@ -2,6 +2,7 @@
   <div class="contentView">
     <div class="chart1 chart" ref="chart1"></div>
     <div class="chart2 chart" ref="chart2"></div>
+    <div class="chart3 chart" ref="chart3"></div>
     <!-- <div class="contentBox">
       <div class="content content1">
         <ul>
@@ -30,11 +31,13 @@ export default {
     return {
       myChart1: null,
       myChart2: null,
-    }
+      myChart3: null,
+    };
   },
   mounted() {
-    this.initChart(1, '干燥机')
-    this.initChart(2, '离心机')
+    this.initChart(1, "离心机");
+    this.initChart(2, "离心机");
+    this.initChart(3, "离心机");
   },
   methods: {
     initChart(flag, name) {
@@ -89,13 +92,15 @@ export default {
           },
         ],
       };
-      if (flag == 1) {
-        this.myChart1 = echarts.init(this.$refs.chart1);
-        this.myChart1.setOption(option);
-      } else {
-        this.myChart2 = echarts.init(this.$refs.chart2);
-        this.myChart2.setOption(option);
-      }
+      // if (flag == 1) {
+      //   this.myChart1 = echarts.init(this.$refs.chart1);
+      //   this.myChart1.setOption(option);
+      // } else {
+      //   this.myChart2 = echarts.init(this.$refs.chart2);
+      //   this.myChart2.setOption(option);
+      // }
+      this[`myChart${flag}`] = echarts.init(this.$refs[`chart${flag}`]);
+      this[`myChart${flag}`].setOption(option);
       // window.addEventListener('resize', () => {
       //   this.myChart.resize()
       // })

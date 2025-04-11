@@ -1,14 +1,14 @@
 <template>
   <div class="editCustomer">
     <div class="addBox">
-      <h3 class="title">编辑客户档案</h3>
+      <h3 class="title">编辑提醒</h3>
       <div class="formData">
         <ul>
           <li>
-            <div class="label">客户名称：</div>
+            <div class="label">设备id：</div>
             <input
               type="text"
-              v-model="submitData.clientName"
+              v-model="submitData.monitorId"
               name=""
               id=""
               class="inp"
@@ -16,33 +16,44 @@
             />
           </li>
           <li>
-            <div class="label">客户地址：</div>
+            <div class="label">事宜：</div>
             <input
               type="text"
               name=""
-              v-model="submitData.clientAddress"
+              v-model="submitData.msg"
               id=""
               class="inp"
               placeholder="请输入"
             />
           </li>
           <li>
-            <div class="label">联系人：</div>
+            <div class="label">提醒时间：</div>
+            <div class="datePick">
+              <el-date-picker
+                v-model="submitData.remindTime"
+                type="datetime"
+                placeholder="选择日期时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
+              ></el-date-picker>
+            </div>
+          </li>
+          <li>
+            <div class="label">总运行时长：</div>
             <input
               type="text"
               name=""
-              v-model="submitData.contactPerson"
+              v-model="submitData.runTime"
               id=""
               class="inp"
               placeholder="请输入"
             />
           </li>
           <li>
-            <div class="label">联系电话：</div>
+            <div class="label">维保次数：</div>
             <input
               type="text"
               name=""
-              v-model="submitData.contactPhone"
+              v-model="submitData.maintainCount"
               id=""
               class="inp"
               placeholder="请输入"
@@ -59,17 +70,18 @@
 </template>
 
 <script>
-import { addCustomer, updateCustomer } from "@/api/customerProfile";
+import { postMaintainEdit } from "@/api/afterSales";
 export default {
   props: ["updateData", "isAdd"],
   data() {
     return {
       submitData: {
-        id: "", // 客户编号
-        clientName: "", // 客户名称
-        clientAddress: "", // 客户地址
-        contactPerson: "", // 联系人
-        contactPhone: "", // 联系电话
+        id: "",
+        monitorId: "",
+        msg: "",
+        remindTime: "",
+        runTime: "",
+        maintainCount: "",
       },
     };
   },
@@ -84,9 +96,7 @@ export default {
         this.reset();
         return;
       }
-      const res = this.isAdd
-        ? await addCustomer(this.submitData)
-        : await updateCustomer(this.submitData);
+      const res = await postMaintainEdit(this.submitData);
       if (res.code == 200) {
         this.$message({
           message: "操作成功",
@@ -123,8 +133,9 @@ export default {
 
   .addBox {
     width: vw(940);
-    height: vh(346);
-    background: url(../../assets/image/addEquipment_bg.png) top left no-repeat;
+    height: vh(446);
+    background: url(../../../assets/image/addEquipment_bg.png) top left
+      no-repeat;
     background-size: 100% 100%;
     position: absolute;
     top: 50%;
@@ -170,7 +181,8 @@ export default {
               background: transparent;
               width: 100%;
               height: 100%;
-              background: url(../../assets/image/inp_bg.png) top left no-repeat;
+              background: url(../../../assets/image/inp_bg.png) top left
+                no-repeat;
               background-size: 100% 100%;
               border: none;
               box-shadow: none;
@@ -183,7 +195,7 @@ export default {
               .el-input__wrapper {
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
+                background: url(../../../assets/image/inp_bg.png) top left
                   no-repeat;
                 background-size: 100% 100%;
                 border: none;
@@ -197,7 +209,7 @@ export default {
             width: vw(376);
             height: vh(40);
             padding: 0 vw(16);
-            background: url(../../assets/image/inp_bg.png) top left no-repeat;
+            background: url(../../../assets/image/inp_bg.png) top left no-repeat;
             background-size: 100% 100%;
             font-weight: 400;
             font-size: vw(14);
@@ -227,12 +239,13 @@ export default {
         font-style: normal;
 
         &:nth-of-type(1) {
-          background: url(../../assets/image/cancel_bg.png) top left no-repeat;
+          background: url(../../../assets/image/cancel_bg.png) top left
+            no-repeat;
           margin-right: vw(122);
         }
 
         &:nth-of-type(2) {
-          background: url(../../assets/image/add_bg.png) top left no-repeat;
+          background: url(../../../assets/image/add_bg.png) top left no-repeat;
         }
       }
     }
