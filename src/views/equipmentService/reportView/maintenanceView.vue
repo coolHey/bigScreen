@@ -31,16 +31,10 @@
     </div>
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column
-          prop="monitorId"
-          align="center"
-          label="设备ID"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column align="center" label="事宜" show-overflow-tooltip>
+        <el-table-column align="center" label="设备ID" show-overflow-tooltip>
           <template #default="scope">
             <div @click="getCurrentScope(scope)">
-              <span>{{ scope.row.remindTime }}</span>
+              <span>{{ scope.row.monitorId }}</span>
               <span class="warning"> 需要维保，请及时处理</span>
             </div>
           </template>

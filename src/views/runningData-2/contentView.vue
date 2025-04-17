@@ -27,6 +27,12 @@
 <script>
 import * as echarts from "echarts";
 export default {
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       myChart1: null,
@@ -34,13 +40,33 @@ export default {
       myChart3: null,
     };
   },
+  watch: {
+    data: {
+      handler() {
+        if (!this.data?.[0]?.length) {
+          return;
+        }
+        const x = (this.data?.[0] || []).map((item) => item.createTime);
+        const frequencys = (this.data?.[0] || []).map((item) => item.frequency);
+        const electricitys = (this.data?.[0] || []).map(
+          (item) => item.electricity
+        );
+        const vibrations = (this.data?.[0] || []).map((item) => item.vibration);
+        this.initChart(1, "离心机-frequency", x, frequencys);
+        this.initChart(2, "离心机-electricity", x, electricitys);
+        this.initChart(3, "离心机-vibration", x, vibrations);
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   mounted() {
-    this.initChart(1, "离心机");
-    this.initChart(2, "离心机");
-    this.initChart(3, "离心机");
+    this.initChart(1, "离心机-frequency");
+    this.initChart(2, "离心机-electricity");
+    this.initChart(3, "离心机-vibration");
   },
   methods: {
-    initChart(flag, name) {
+    initChart(flag, name, x = [], y = []) {
       let option = {
         tooltip: {
           trigger: "axis",
@@ -61,7 +87,7 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          data: x,
           axisTick: {
             show: false,
           },
@@ -85,7 +111,7 @@ export default {
         series: [
           {
             name,
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            data: y,
             type: "line",
             smooth: true,
             symbol: "none",
@@ -99,8 +125,9 @@ export default {
       //   this.myChart2 = echarts.init(this.$refs.chart2);
       //   this.myChart2.setOption(option);
       // }
-      this[`myChart${flag}`] = echarts.init(this.$refs[`chart${flag}`]);
-      this[`myChart${flag}`].setOption(option);
+      const chart = echarts.init(this.$refs[`chart${flag}`]);
+      chart.setOption(option);
+      this[`myChart${flag}`] = chart;
       // window.addEventListener('resize', () => {
       //   this.myChart.resize()
       // })

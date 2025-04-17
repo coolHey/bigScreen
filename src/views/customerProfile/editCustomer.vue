@@ -5,6 +5,18 @@
       <div class="formData">
         <ul>
           <li>
+            <div class="label">客户编号：</div>
+            <input
+              type="text"
+              :disabled="!isAdd"
+              v-model="submitData.clientId"
+              name=""
+              id=""
+              class="inp"
+              placeholder="请输入"
+            />
+          </li>
+          <li>
             <div class="label">客户名称：</div>
             <input
               type="text"
@@ -65,7 +77,8 @@ export default {
   data() {
     return {
       submitData: {
-        id: "", // 客户编号
+        id: "", // id
+        clientId: "", // 客户编号
         clientName: "", // 客户名称
         clientAddress: "", // 客户地址
         contactPerson: "", // 联系人
@@ -123,7 +136,7 @@ export default {
 
   .addBox {
     width: vw(940);
-    height: vh(346);
+    height: vh(446);
     background: url(../../assets/image/addEquipment_bg.png) top left no-repeat;
     background-size: 100% 100%;
     position: absolute;

@@ -8,7 +8,7 @@
             type="text"
             placeholder="请输入"
             class="inp"
-            v-model="form.id"
+            v-model="form.clientId"
           />
         </li>
         <li>
@@ -35,7 +35,7 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="id"
+          prop="clientId"
           align="center"
           label="客户编号"
           show-overflow-tooltip

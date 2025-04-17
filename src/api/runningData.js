@@ -1,5 +1,4 @@
 import request from "./request";
-import qs from "qs";
 
 // 获取列表
 export const getListData = (id, params) => {
@@ -9,6 +8,10 @@ export const getListData = (id, params) => {
 // 获取左右两侧数据
 export const getAutoData = (params, query) => {
   return request.get("/data/autoData/" + params.id, { params: query });
+};
+
+export const getCompareData = (data) => {
+  return request.post("/data/compareData", data);
 };
 
 // 新增设备

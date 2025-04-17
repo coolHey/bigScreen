@@ -167,8 +167,8 @@
             <div class="label">设备ID：</div>
             <input
               type="text"
-              v-model="submitData.id"
-              :disabled="data.id"
+              v-model="submitData.monitorId"
+              :disabled="data?.monitorId"
               name=""
               id=""
               class="inp"
@@ -233,7 +233,8 @@ export default {
       citiesList: [],
       areasList: [],
       submitData: {
-        id: "", // 设备id
+        id: "", // id
+        monitorId: "", // 设备id
         client: "", //客户名称
         type: "", //设备型号
         province: "", //省
@@ -249,10 +250,10 @@ export default {
   },
 
   mounted() {
-    if (this.data.id) {
+    if (this.data?.id) {
       Object.assign(this.submitData, this.data);
     }
-    this.submitData.id = this.data.id;
+    this.submitData.id = this.data?.id;
     this.getProvincesList();
   },
 
@@ -261,7 +262,7 @@ export default {
       if (idx == 2) {
         let check = false;
         for (const [key] of Object.entries(this.submitData)) {
-          if (!this.submitData[key]) {
+          if (!this.submitData[key] && key != "id") {
             check = true;
           }
         }
@@ -269,7 +270,7 @@ export default {
           alert("请填写完整内容");
           return;
         }
-        if (this.data.id) {
+        if (this.data?.id) {
           upDateDevice(this.submitData).then((res) => {
             if (res.code == 200) {
               this.$emit("doSubmit", idx);
@@ -352,7 +353,7 @@ export default {
 
   .addBox {
     width: vw(940);
-    height: vh(544);
+    height: vh(624);
     background: url(../../assets/image/addEquipment_bg.png) top left no-repeat;
     background-size: 100% 100%;
     position: absolute;

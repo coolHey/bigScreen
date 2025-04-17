@@ -1,5 +1,4 @@
 import request from "./request";
-import qs from "qs";
 
 // 获取列表
 export const getListData = (params) => {
@@ -22,7 +21,6 @@ export const upDateDevice = (params) => {
 export const deleteDevice = (data) => {
   return request.post("/monitor/infoDelete/" + data.id);
 };
-
 
 // 获取省级列表
 export const getProvinces = (params) => {

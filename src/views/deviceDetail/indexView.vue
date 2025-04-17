@@ -4,12 +4,22 @@
       <ul>
         <li>
           <span class="label">设备ID：</span>
-          <input type="text" v-model="filterData.id" placeholder="请输入" class="inp" />
+          <input
+            type="text"
+            v-model="filterData.monitorId"
+            placeholder="请输入"
+            class="inp"
+          />
         </li>
         <li>
           <span class="label">质保日期：</span>
           <div class="datePick">
-            <el-date-picker v-model="filterData.warrantyDate" value-format="YYYY-MM-DD HH:mm:ss" type="datetime" placeholder="选择日期时间">
+            <el-date-picker
+              v-model="filterData.warrantyDate"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              type="datetime"
+              placeholder="选择日期时间"
+            >
             </el-date-picker>
           </div>
         </li>
@@ -22,39 +32,102 @@
     </div>
     <div class="tableBox">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column type="index" align="center" label="序号" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="province" align="center" label="省" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="city" align="center" label="市" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="district" align="center" label="区/县" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="type" align="center" label="设备型号" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="factoryId" align="center" label="出厂编号" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="factoryDate" align="center" label="出厂日期" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="debugDate" align="center" label="调试日期" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="client" align="center" label="客户名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="id" align="center" label="设备ID" show-overflow-tooltip></el-table-column>
+        <el-table-column
+          type="index"
+          align="center"
+          label="序号"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="province"
+          align="center"
+          label="省"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="city"
+          align="center"
+          label="市"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="district"
+          align="center"
+          label="区/县"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="type"
+          align="center"
+          label="设备型号"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="factoryId"
+          align="center"
+          label="出厂编号"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="factoryDate"
+          align="center"
+          label="出厂日期"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="debugDate"
+          align="center"
+          label="调试日期"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="client"
+          align="center"
+          label="客户名称"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="id"
+          align="center"
+          label="设备ID"
+          show-overflow-tooltip
+        ></el-table-column>
         <el-table-column prop="address" align="center" label="操作" width="125">
           <template #default="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">编辑
+            <el-button @click="handleClick(scope.row)" type="text" size="small"
+              >编辑
             </el-button>
-            <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click="handleDelete(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="paginationBox">
-      <el-pagination :current-page.sync="filterData.pn" @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="filterData.total" background
-        layout="total, prev, pager, next">
+      <el-pagination
+        :current-page="filterData.pn"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :total="filterData.total"
+        background
+        layout="total, prev, pager, next"
+      >
       </el-pagination>
     </div>
     <!-- <div class="addDialog"> -->
     <!-- </div> -->
-    <add-device-view @doSubmit="closeDialog(idx)" v-if="showAdd" :data="editData"></add-device-view>
+    <add-device-view
+      @doSubmit="closeDialog(idx)"
+      v-if="showAdd"
+      :data="editData"
+    ></add-device-view>
   </div>
 </template>
 
 <script>
 import addDeviceView from "./addDevice.vue";
-import { getListData, deleteDevice } from '@/api/device'
+import { getListData, deleteDevice } from "@/api/device";
 export default {
   components: {
     addDeviceView,
@@ -69,60 +142,60 @@ export default {
         pn: 1,
         size: 10,
         total: 0,
-        warrantyDate: '', // 质保日期
-        id: '', // 设备编号
+        warrantyDate: "", // 质保日期
+        id: "", // 设备编号
       },
-      editData: {}
+      editData: {},
     };
   },
   mounted() {
-    this.getList()
+    this.getList();
   },
   methods: {
     // 获取数据
     getList() {
-      getListData(this.filterData).then(res => {
+      getListData(this.filterData).then((res) => {
         if (res.code == 200) {
-          this.tableData = res.data.records
-          this.filterData.total = res.data.total
-          this.filterData.pn = res.data.current
+          this.tableData = res.data.records;
+          this.filterData.total = res.data.total;
+          this.filterData.pn = res.data.current;
         } else {
           this.$message({
-            message: '获取数据失败',
-            type: 'warning'
+            message: "获取数据失败",
+            type: "warning",
           });
         }
-      })
+      });
     },
 
     // 删除设备
     handleDelete(row) {
-      deleteDevice({ id: row.id }).then(res => {
+      deleteDevice({ id: row.monitorId }).then((res) => {
         console.log(res);
         if (res.code == 200) {
           this.$message({
-            message: '删除成功',
-            type: 'success'
+            message: "删除成功",
+            type: "success",
           });
-          this.getList()
+          this.getList();
         } else {
           this.$message({
-            message: '删除失败',
-            type: 'warning'
+            message: "删除失败",
+            type: "warning",
           });
         }
-      })
+      });
     },
 
     // 查询
     handleQuery() {
-      this.getList()
+      this.getList();
     },
     // 重置
 
     handleReset() {
-      this.filterData.warrantyDate = ''
-      this.filterData.id = ''
+      this.filterData.warrantyDate = "";
+      this.filterData.monitorId = "";
     },
 
     onSubmit() {
@@ -132,19 +205,19 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      this.filterData.pn = val
-      this.getList()
+      this.filterData.pn = val;
+      this.getList();
     },
     handleClick(row) {
-      this.editData = row
-      this.showAdd = true
+      this.editData = row;
+      this.showAdd = true;
       console.log(row);
     },
-    closeDialog(idx) {
+    closeDialog() {
       this.showAdd = false;
-      this.editData = null
-      this.filterData.pn = 1
-      this.filterData.size = 10
+      this.editData = null;
+      this.filterData.pn = 1;
+      this.filterData.size = 10;
       this.getList();
     },
   },
@@ -222,13 +295,18 @@ export default {
           width: vw(72);
           height: vh(38);
           cursor: pointer;
-          background: linear-gradient(180deg,
-              rgba(1, 16, 42, 0.33) 0%,
-              #0a356d 100%);
+          background: linear-gradient(
+            180deg,
+            rgba(1, 16, 42, 0.33) 0%,
+            #0a356d 100%
+          );
           border: 1px solid;
-          border-image: linear-gradient(80deg,
+          border-image: linear-gradient(
+              80deg,
               rgba(16, 35, 72, 1),
-              rgba(55, 104, 186, 1)) 1 1;
+              rgba(55, 104, 186, 1)
+            )
+            1 1;
           outline: none;
           font-weight: 400;
           font-size: vw(16);
@@ -275,10 +353,12 @@ export default {
 
           thead {
             tr {
-              background: linear-gradient(270deg,
-                  rgba(0, 113, 255, 0) 0%,
-                  rgba(0, 145, 255, 0.2) 52%,
-                  rgba(0, 109, 255, 0) 100%);
+              background: linear-gradient(
+                270deg,
+                rgba(0, 113, 255, 0) 0%,
+                rgba(0, 145, 255, 0.2) 52%,
+                rgba(0, 109, 255, 0) 100%
+              );
               backdrop-filter: blur(2px);
 
               th {
@@ -310,17 +390,21 @@ export default {
 
               .el-table__row {
                 &:nth-child(odd) {
-                  background: linear-gradient(270deg,
-                      rgba(0, 113, 255, 0) 0%,
-                      rgba(33, 55, 89, 0.2) 52%,
-                      rgba(0, 109, 255, 0) 100%);
+                  background: linear-gradient(
+                    270deg,
+                    rgba(0, 113, 255, 0) 0%,
+                    rgba(33, 55, 89, 0.2) 52%,
+                    rgba(0, 109, 255, 0) 100%
+                  );
                 }
 
                 &:nth-child(even) {
-                  background: linear-gradient(270deg,
-                      rgba(0, 113, 255, 0) 0%,
-                      rgba(12, 72, 162, 0.2) 52%,
-                      rgba(0, 109, 255, 0) 100%);
+                  background: linear-gradient(
+                    270deg,
+                    rgba(0, 113, 255, 0) 0%,
+                    rgba(12, 72, 162, 0.2) 52%,
+                    rgba(0, 109, 255, 0) 100%
+                  );
                 }
 
                 backdrop-filter: blur(2px);
@@ -407,15 +491,20 @@ export default {
           font-style: normal;
 
           &.is-active {
-            background: linear-gradient(270deg,
-                rgba(0, 105, 255, 0) 0%,
-                rgba(62, 135, 255, 0.43) 100%);
+            background: linear-gradient(
+              270deg,
+              rgba(0, 105, 255, 0) 0%,
+              rgba(62, 135, 255, 0.43) 100%
+            );
             border: 1px solid;
-            border-image: linear-gradient(136deg,
+            border-image: linear-gradient(
+                136deg,
                 rgba(183, 217, 255, 1),
                 rgba(53, 149, 255, 1),
                 rgba(145, 198, 255, 1),
-                rgba(0, 118, 246, 1)) 1 1;
+                rgba(0, 118, 246, 1)
+              )
+              1 1;
           }
         }
       }

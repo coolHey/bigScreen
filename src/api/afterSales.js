@@ -23,7 +23,11 @@ export const getMaintainData = (params) => {
   });
 };
 
-export const postMaintainEdit = (data) => {
+export const getMaintainContent = (id) => {
+  return request.get(`/maintain/maintainContent/${id}`);
+};
+
+export const updateMaintainEdit = (data) => {
   return request.post("/maintain/maintainUpdate", data);
 };
 

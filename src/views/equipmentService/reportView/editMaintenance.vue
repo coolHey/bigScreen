@@ -4,56 +4,12 @@
       <h3 class="title">编辑提醒</h3>
       <div class="formData">
         <ul>
-          <li>
-            <div class="label">设备id：</div>
-            <input
-              type="text"
-              v-model="submitData.monitorId"
-              name=""
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
-          </li>
-          <li>
-            <div class="label">事宜：</div>
+          <li v-for="(item, key, index) in submitData" :key="key">
+            <div class="label">事宜{{ index + 1 }}：</div>
             <input
               type="text"
               name=""
-              v-model="submitData.msg"
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
-          </li>
-          <li>
-            <div class="label">提醒时间：</div>
-            <div class="datePick">
-              <el-date-picker
-                v-model="submitData.remindTime"
-                type="datetime"
-                placeholder="选择日期时间"
-                value-format="YYYY-MM-DD HH:mm:ss"
-              ></el-date-picker>
-            </div>
-          </li>
-          <li>
-            <div class="label">总运行时长：</div>
-            <input
-              type="text"
-              name=""
-              v-model="submitData.runTime"
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
-          </li>
-          <li>
-            <div class="label">维保次数：</div>
-            <input
-              type="text"
-              name=""
-              v-model="submitData.maintainCount"
+              v-model="submitData[key]"
               id=""
               class="inp"
               placeholder="请输入"
@@ -70,24 +26,33 @@
 </template>
 
 <script>
-import { postMaintainEdit } from "@/api/afterSales";
+import { getMaintainContent, updateMaintainEdit } from "@/api/afterSales";
 export default {
-  props: ["updateData", "isAdd"],
+  props: ["updateData"],
   data() {
     return {
       submitData: {
-        id: "",
-        monitorId: "",
-        msg: "",
-        remindTime: "",
-        runTime: "",
-        maintainCount: "",
+        content1: "",
+        content2: "",
+        content3: "",
+        content4: "",
+        content5: "",
+        content6: "",
       },
     };
   },
-  mounted() {
-    console.log(this.updateData);
-    this.submitData = Object.assign(this.submitData, this.updateData);
+  async mounted() {
+    const { id } = this.updateData;
+    const res = await getMaintainContent(id);
+    if (res.code != 200) {
+      this.$message({
+        message: "获取数据失败",
+        type: "warning",
+      });
+      return;
+    }
+    const contents = res.data;
+    this.submitData = Object.assign(this.submitData, contents);
   },
   methods: {
     async doSubmit(idx) {
@@ -96,7 +61,10 @@ export default {
         this.reset();
         return;
       }
-      const res = await postMaintainEdit(this.submitData);
+      const res = await updateMaintainEdit({
+        id: this.updateData.id,
+        ...this.submitData,
+      });
       if (res.code == 200) {
         this.$message({
           message: "操作成功",

@@ -17,7 +17,7 @@
             <el-date-picker
               v-model="time"
               value-format="YYYY-MM-DD HH:mm:ss"
-              type="datetime"
+              type="datetimerange"
               placeholder="选择日期时间"
             >
             </el-date-picker>
@@ -30,7 +30,7 @@
     </div>
     <div class="main">
       <left-view :data="detailData"></left-view>
-      <content-view :data="lineData"></content-view>
+      <content-view :data="compareData"></content-view>
       <right-view
         :data="currentData?.[0] || {}"
         :time="currentDateTime"
@@ -43,7 +43,7 @@
 import leftView from "./leftView.vue";
 import contentView from "./contentView.vue";
 import rightView from "./rightView.vue";
-import { getListData, getAutoData } from "@/api/runningData";
+import { getListData, getAutoData, getCompareData } from "@/api/runningData";
 import { ElMessage } from "element-plus";
 export default {
   components: {
@@ -60,6 +60,7 @@ export default {
       time: "",
       detailData: {},
       lineData: {},
+      compareData: {},
       currentData: null,
       timer: null,
     };
@@ -69,6 +70,7 @@ export default {
     this.getCurrentDateTime();
     this.handleQuery();
     this.getInfoData();
+    this.getComData();
     this.timer = setInterval(() => {
       this.getInfoData();
     }, 5000);
@@ -113,6 +115,25 @@ export default {
       });
     },
 
+    async getComData() {
+      if (this.deviceId && Array.isArray(this.time)) {
+        const res = await getCompareData([
+          {
+            monitorId: this.deviceId,
+            beginTime: this.time[0],
+            endTime: this.time[1],
+            type: "centrifuge",
+            keyWords: ["frequency", "electricity", "vibration"],
+          },
+        ]);
+        if (res.code == 200) {
+          this.compareData = res.data;
+        } else {
+          ElMessage.error(res.message);
+        }
+      }
+    },
+
     getCurrentDateTime() {
       const now = new Date();
       const year = now.getFullYear();
@@ -139,6 +160,7 @@ export default {
       // }
       if (this.time.length) {
         this.getData(this.time[0], this.time[1], "lineData");
+        this.getComData();
       }
     },
   },
@@ -197,7 +219,7 @@ export default {
           width: vw(245);
           height: vh(38);
 
-          :deep(.el-input) {
+          :deep(.el-input__wrapper) {
             width: 100%;
             height: 100%;
             border: none;
