@@ -4,7 +4,7 @@ import request from "./request";
 export const getArchivePageData = (params) => {
   return request.get("/client/archivePage", {
     params,
-  },);
+  });
 };
 
 // 8.2更新客户信息
@@ -26,9 +26,7 @@ export const deleteCustomer = (id) => {
 export const doWarnExport = (params) => {
   return request.get("/client/archiveExport", {
     params,
-  },
-  {
-    responseType: 'blob',
-    responseEncoding: "utf8"
+    responseType: "blob",
+    responseEncoding: "utf8",
   });
 };

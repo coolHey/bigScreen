@@ -161,7 +161,11 @@ export default {
       }
       doWarnExport({ ids: ids ? ids.join(",") : "" }).then((res) => {
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([res]));
+        link.href = URL.createObjectURL(
+          new Blob([res], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8",
+          })
+        );
         link.download = "下载文件.xlsx";
         document.body.appendChild(link);
         link.click();

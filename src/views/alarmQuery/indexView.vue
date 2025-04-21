@@ -9,7 +9,11 @@
         <li>
           <span class="label">质保日前：</span>
           <div class="datePick">
-            <el-date-picker v-model="value1" type="datetime" placeholder="选择日期时间">
+            <el-date-picker
+              v-model="value1"
+              type="datetime"
+              placeholder="选择日期时间"
+            >
             </el-date-picker>
           </div>
         </li>
@@ -21,32 +25,60 @@
       <div class="addBtn" @click="handleExport">一键导出</div>
     </div>
     <div class="tableBox">
-      <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection">
-        </el-table-column>
-        <el-table-column type="index" align="center" label="序号" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="msg" align="center" label="报警代码" show-overflow-tooltip>
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection"> </el-table-column>
+        <el-table-column
+          type="index"
+          align="center"
+          label="序号"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="msg"
+          align="center"
+          label="报警代码"
+          show-overflow-tooltip
+        >
           <template #default="scope">
             <span>
               {{ scope.row.msg.code }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="msg" align="center" label="报警内容" show-overflow-tooltip>
+        <el-table-column
+          prop="msg"
+          align="center"
+          label="报警内容"
+          show-overflow-tooltip
+        >
           <template #default="scope">
             <span>
               {{ scope.row.msg.msg }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="msg" align="center" label="报警分析" show-overflow-tooltip>
+        <el-table-column
+          prop="msg"
+          align="center"
+          label="报警分析"
+          show-overflow-tooltip
+        >
           <template #default="scope">
             <span>
               {{ scope.row.msg.analysis }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="msg" align="center" label="解决方案" show-overflow-tooltip>
+        <el-table-column
+          prop="msg"
+          align="center"
+          label="解决方案"
+          show-overflow-tooltip
+        >
           <template #default="scope">
             <span>
               {{ scope.row.msg.solve }}
@@ -64,8 +96,14 @@
       </el-table>
     </div>
     <div class="paginationBox">
-      <el-pagination :current-page.sync="filterData.pn" @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="filterData.total" background
-        layout="total, prev, pager, next">
+      <el-pagination
+        v-model:current-page="filterData.pn"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :total="filterData.total"
+        background
+        layout="total, prev, pager, next"
+      >
       </el-pagination>
     </div>
     <!-- <div class="addDialog"> -->
@@ -74,7 +112,7 @@
 </template>
 
 <script>
-import { getListData, doWarnExport } from '@/api/alarmQuery';
+import { getListData, doWarnExport } from "@/api/alarmQuery";
 export default {
   data() {
     return {
@@ -86,48 +124,48 @@ export default {
         size: 10,
         total: 0,
       },
-      multipleSelection: []
+      multipleSelection: [],
     };
   },
   mounted() {
-    this.getList()
+    this.getList();
   },
   methods: {
     // 获取数据
     getList() {
-      getListData(this.filterData).then(res => {
+      getListData(this.filterData).then((res) => {
         if (res.code == 200) {
           console.log(res.data);
-          this.tableData = res.data.records
-          this.filterData.total = res.data.total
+          this.tableData = res.data.records;
+          this.filterData.total = res.data.total;
         } else {
           this.$message({
-            message: '获取数据失败',
-            type: 'warning'
+            message: "获取数据失败",
+            type: "warning",
           });
         }
-      })
+      });
     },
 
     // 删除设备
-    handleDelete(row) {
-      return
-      deleteDevice({ id: row.id }).then(res => {
-        console.log(res);
-        if (res.code == 200) {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          });
-          this.getList()
-        } else {
-          this.$message({
-            message: '删除失败',
-            type: 'warning'
-          });
-        }
-      })
-    },
+    // handleDelete(row) {
+    //   return;
+    //   deleteDevice({ id: row.id }).then((res) => {
+    //     console.log(res);
+    //     if (res.code == 200) {
+    //       this.$message({
+    //         message: "删除成功",
+    //         type: "success",
+    //       });
+    //       this.getList();
+    //     } else {
+    //       this.$message({
+    //         message: "删除失败",
+    //         type: "warning",
+    //       });
+    //     }
+    //   });
+    // },
     // 绑定选择项
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -135,28 +173,32 @@ export default {
 
     // 导出
     handleExport() {
-      let ids = []
-      this.multipleSelection.forEach(v => {
+      let ids = [];
+      this.multipleSelection.forEach((v) => {
         console.log(v);
-        ids.push(v.id)
-      })
+        ids.push(v.id);
+      });
       if (!ids.length) {
         this.$message({
-          message: '请选择需要导出的数据',
-          type: 'warning'
-        })
-        return
+          message: "请选择需要导出的数据",
+          type: "warning",
+        });
+        return;
       }
-      doWarnExport({ ids: ids ? ids.join(',') : '' }).then(res => {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(new Blob([res]));
-        link.download = '下载文件.xlsx';
+      doWarnExport({ ids: ids ? ids.join(",") : "" }).then((res) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(
+          new Blob([res], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8",
+          })
+        );
+        link.download = "下载文件.xlsx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(link.href);
         console.log(res);
-      })
+      });
     },
 
     onSubmit() {
@@ -166,8 +208,8 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      this.filterData.pn = val
-      this.getList()
+      this.filterData.pn = val;
+      this.getList();
     },
     handleClick(row) {
       console.log(row);
@@ -246,13 +288,18 @@ export default {
         .btn {
           width: vw(72);
           height: vh(38);
-          background: linear-gradient(180deg,
-              rgba(1, 16, 42, 0.33) 0%,
-              #0a356d 100%);
+          background: linear-gradient(
+            180deg,
+            rgba(1, 16, 42, 0.33) 0%,
+            #0a356d 100%
+          );
           border: 1px solid;
-          border-image: linear-gradient(80deg,
+          border-image: linear-gradient(
+              80deg,
               rgba(16, 35, 72, 1),
-              rgba(55, 104, 186, 1)) 1 1;
+              rgba(55, 104, 186, 1)
+            )
+            1 1;
           outline: none;
           font-weight: 400;
           font-size: vw(16);
@@ -299,10 +346,12 @@ export default {
 
           thead {
             tr {
-              background: linear-gradient(270deg,
-                  rgba(0, 113, 255, 0) 0%,
-                  rgba(0, 145, 255, 0.2) 52%,
-                  rgba(0, 109, 255, 0) 100%);
+              background: linear-gradient(
+                270deg,
+                rgba(0, 113, 255, 0) 0%,
+                rgba(0, 145, 255, 0.2) 52%,
+                rgba(0, 109, 255, 0) 100%
+              );
               backdrop-filter: blur(2px);
 
               th {
@@ -334,17 +383,21 @@ export default {
 
               .el-table__row {
                 &:nth-child(odd) {
-                  background: linear-gradient(270deg,
-                      rgba(0, 113, 255, 0) 0%,
-                      rgba(33, 55, 89, 0.2) 52%,
-                      rgba(0, 109, 255, 0) 100%);
+                  background: linear-gradient(
+                    270deg,
+                    rgba(0, 113, 255, 0) 0%,
+                    rgba(33, 55, 89, 0.2) 52%,
+                    rgba(0, 109, 255, 0) 100%
+                  );
                 }
 
                 &:nth-child(even) {
-                  background: linear-gradient(270deg,
-                      rgba(0, 113, 255, 0) 0%,
-                      rgba(12, 72, 162, 0.2) 52%,
-                      rgba(0, 109, 255, 0) 100%);
+                  background: linear-gradient(
+                    270deg,
+                    rgba(0, 113, 255, 0) 0%,
+                    rgba(12, 72, 162, 0.2) 52%,
+                    rgba(0, 109, 255, 0) 100%
+                  );
                 }
 
                 backdrop-filter: blur(2px);
@@ -431,15 +484,20 @@ export default {
           font-style: normal;
 
           &.is-active {
-            background: linear-gradient(270deg,
-                rgba(0, 105, 255, 0) 0%,
-                rgba(62, 135, 255, 0.43) 100%);
+            background: linear-gradient(
+              270deg,
+              rgba(0, 105, 255, 0) 0%,
+              rgba(62, 135, 255, 0.43) 100%
+            );
             border: 1px solid;
-            border-image: linear-gradient(136deg,
+            border-image: linear-gradient(
+                136deg,
                 rgba(183, 217, 255, 1),
                 rgba(53, 149, 255, 1),
                 rgba(145, 198, 255, 1),
-                rgba(0, 118, 246, 1)) 1 1;
+                rgba(0, 118, 246, 1)
+              )
+              1 1;
           }
         }
       }

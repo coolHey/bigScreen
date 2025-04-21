@@ -12,7 +12,6 @@ export const getListData = (params) => {
 export const doWarnExport = (params) => {
   return request.get("/msg/warnExport", {
     params,
-  }, {
     responseType: 'blob',
     responseEncoding: "utf8"
   });
