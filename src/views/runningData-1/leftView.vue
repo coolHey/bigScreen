@@ -44,7 +44,7 @@
         </li>
         <li>
           <span>布料频率</span>
-          <span>{{ data.d8 || "-" }}</span>
+          <span>{{ data.frequency || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -52,11 +52,11 @@
       <ul>
         <li>
           <span>布料电流</span>
-          <span>{{ data.d9 || "-" }}</span>
+          <span>{{ data.electricity || "-" }}</span>
         </li>
         <li>
-          <span>暂定</span>
-          <span>{{ data.d10 || "-" }}</span>
+          <span>布料振动值</span>
+          <span>{{ data.vibration || "-" }}</span>
         </li>
       </ul>
     </div>

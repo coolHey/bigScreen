@@ -75,25 +75,25 @@ export default {
         },
         {
           label: "设备运行数据-离心机",
-          value: 11,
+          value: 12,
           path: "/runningData-2",
           children: [],
         },
         {
           label: "设备详情列表",
-          value: 12,
+          value: 13,
           path: "/deviceDetail",
           children: [],
         },
         {
           label: "设备参数详情",
-          value: 13,
+          value: 14,
           path: "/equipmentParameters",
           children: [],
         },
         {
           label: "设备质保期",
-          value: 14,
+          value: 15,
           path: "/equipmentShelfLife",
           children: [],
         },
@@ -103,12 +103,12 @@ export default {
         //   path: "",
         //   children: [],
         // },
-        {
-          label: "报警信息",
-          value: 3,
-          path: "/alarmQuery",
-          children: [],
-        },
+        // {
+        //   label: "报警信息",
+        //   value: 3,
+        //   path: "/alarmQuery",
+        //   children: [],
+        // },
         // {
         //   label: "远程运维",
         //   value: 4,

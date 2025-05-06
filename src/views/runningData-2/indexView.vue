@@ -4,22 +4,12 @@
       <ul>
         <li>
           <span class="label">设备ID：</span>
-          <input
-            type="text"
-            v-model="deviceId"
-            placeholder="请输入"
-            class="inp"
-          />
+          <input type="text" v-model="deviceId" placeholder="请输入" class="inp" />
         </li>
         <li>
           <span class="label">质保日前：</span>
           <div class="datePick">
-            <el-date-picker
-              v-model="time"
-              value-format="YYYY-MM-DD HH:mm:ss"
-              type="datetimerange"
-              placeholder="选择日期时间"
-            >
+            <el-date-picker v-model="time" value-format="YYYY-MM-DD HH:mm:ss" type="datetimerange" placeholder="选择日期时间">
             </el-date-picker>
           </div>
         </li>
@@ -30,11 +20,8 @@
     </div>
     <div class="main">
       <left-view :data="detailData"></left-view>
-      <content-view :data="compareData"></content-view>
-      <right-view
-        :data="currentData?.[0] || {}"
-        :time="currentDateTime"
-      ></right-view>
+      <content-view :data="compareData" @getRightData="getRightData"></content-view>
+      <right-view :data="currentData || {}" :time="currentDateTime"></right-view>
     </div>
   </div>
 </template>
@@ -76,6 +63,10 @@ export default {
     }, 5000);
   },
   methods: {
+    getRightData(data) {
+      this.currentData = data;
+    },
+
     getInfoData() {
       // getAutoData({ id: this.deviceId }).then(res => {
       //   if (res.code == 200) {
@@ -108,7 +99,9 @@ export default {
         endTime,
       }).then((res) => {
         if (res.code == 200) {
-          this[key] = res.data.length && res.data;
+          if (res.data) {
+            this[key] = res.data.length && res.data;
+          }
         } else {
           ElMessage.error(res.message);
         }
@@ -164,9 +157,18 @@ export default {
       }
     },
   },
+
+  beforeUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  },
+
   beforeMount() {
     if (this.timer) {
       clearInterval(this.timer);
+      this.timer = null;
     }
   },
 };
@@ -243,16 +245,18 @@ export default {
 
     .addBtn {
       background: url(../../assets/image/add_bg.png) top left no-repeat;
-      background-size: 100% auto;
+      background-size: 100% 100%;
       width: vw(170);
       height: vh(42);
       text-align: center;
-      line-height: vh(42);
       font-size: vw(16);
       color: #fff;
       letter-spacing: vw(2);
       font-style: normal;
       cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 

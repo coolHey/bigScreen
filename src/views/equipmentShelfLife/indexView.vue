@@ -62,7 +62,7 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="id"
+          prop="factoryId"
           align="center"
           label="设备ID"
           show-overflow-tooltip

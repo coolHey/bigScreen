@@ -28,7 +28,7 @@
         </li>
         <li>
           <span>热源温度</span>
-          <span>{{ data.d8 || "-" }}</span>
+          <span>{{ data.d5 || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -36,15 +36,15 @@
       <ul>
         <li>
           <span>输出电压</span>
-          <span>{{ data.d5 || "-" }}</span>
-        </li>
-        <li>
-          <span>输出电流</span>
           <span>{{ data.d6 || "-" }}</span>
         </li>
         <li>
-          <span>腔体温度</span>
+          <span>输出电流</span>
           <span>{{ data.d7 || "-" }}</span>
+        </li>
+        <li>
+          <span>腔体温度</span>
+          <span>{{ data.frequency || "-" }}</span>
         </li>
       </ul>
     </div>
@@ -52,11 +52,11 @@
       <ul>
         <li>
           <span>真空上料</span>
-          <span>{{ data.d9 || "-" }}</span>
+          <span>{{ data.electricity || "-" }}</span>
         </li>
         <li>
           <span>螺旋输送</span>
-          <span>{{ data.d10 || "-" }}</span>
+          <span>{{ data.vibration || "-" }}</span>
         </li>
       </ul>
     </div>

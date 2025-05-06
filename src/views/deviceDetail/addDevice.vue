@@ -7,18 +7,9 @@
           <li>
             <div class="label">省：</div>
             <div class="elSelect small">
-              <el-select
-                v-model="submitData.province"
-                collapse-tags
-                placeholder="请选择"
-                @change="provinceChange"
-              >
-                <el-option
-                  v-for="item in provincesList"
-                  :key="item.provinceId"
-                  :label="item.province"
-                  :value="item.provinceId"
-                >
+              <el-select v-model="submitData.province" collapse-tags placeholder="请选择" @change="provinceChange">
+                <el-option v-for="item in provincesList" :key="item.provinceId" :label="item.province"
+                  :value="item.provinceId">
                 </el-option>
               </el-select>
             </div>
@@ -26,18 +17,8 @@
           <li>
             <div class="label">市</div>
             <div class="elSelect small">
-              <el-select
-                v-model="submitData.city"
-                collapse-tags
-                placeholder="请选择"
-                @change="cityChange"
-              >
-                <el-option
-                  v-for="item in citiesList"
-                  :key="item.cityId"
-                  :label="item.city"
-                  :value="item.cityId"
-                >
+              <el-select v-model="submitData.city" collapse-tags placeholder="请选择" @change="cityChange">
+                <el-option v-for="item in citiesList" :key="item.cityId" :label="item.city" :value="item.cityId">
                 </el-option>
               </el-select>
             </div>
@@ -45,17 +26,8 @@
           <li>
             <div class="label">区/县</div>
             <div class="elSelect small">
-              <el-select
-                v-model="submitData.district"
-                collapse-tags
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in areasList"
-                  :key="item.areaId"
-                  :label="item.area"
-                  :value="item.areaId"
-                >
+              <el-select v-model="submitData.district" collapse-tags placeholder="请选择">
+                <el-option v-for="item in areasList" :key="item.areaId" :label="item.area" :value="item.areaId">
                 </el-option>
               </el-select>
             </div>
@@ -81,25 +53,11 @@
           </li> -->
           <li>
             <div class="label">设备型号：</div>
-            <input
-              type="text"
-              v-model="submitData.type"
-              name=""
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
+            <input type="text" v-model="submitData.type" name="" id="" class="inp" placeholder="请输入" />
           </li>
           <li>
             <div class="label">出厂编号：</div>
-            <input
-              type="text"
-              v-model="submitData.factoryId"
-              name=""
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
+            <input type="text" v-model="submitData.factoryId" name="" id="" class="inp" placeholder="请输入" />
           </li>
           <!-- <li>
             <div class="label">出厂编号：</div>
@@ -123,12 +81,8 @@
           <li>
             <div class="label">出厂日期</div>
             <div class="datePick">
-              <el-date-picker
-                v-model="submitData.factoryDate"
-                type="datetime"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期时间"
-              >
+              <el-date-picker v-model="submitData.factoryDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间">
               </el-date-picker>
               <!-- <el-date-picker
                 v-model="value2"
@@ -143,58 +97,29 @@
           <li>
             <div class="label">调试日期：</div>
             <div class="datePick">
-              <el-date-picker
-                v-model="submitData.debugDate"
-                type="datetime"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期时间"
-              >
+              <el-date-picker v-model="submitData.debugDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间">
               </el-date-picker>
             </div>
           </li>
           <li>
             <div class="label">客户名称：</div>
-            <input
-              type="text"
-              v-model="submitData.client"
-              name=""
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
+            <input type="text" v-model="submitData.client" name="" id="" class="inp" placeholder="请输入" />
           </li>
           <li>
             <div class="label">设备ID：</div>
-            <input
-              type="text"
-              v-model="submitData.monitorId"
-              :disabled="data?.monitorId"
-              name=""
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
+            <input type="text" v-model="submitData.monitorId" :disabled="data?.monitorId" name="" id="" class="inp"
+              placeholder="请输入" />
           </li>
           <li>
             <div class="label">质保期：</div>
-            <input
-              type="text"
-              v-model="submitData.warrantySpan"
-              name=""
-              id=""
-              class="inp"
-              placeholder="请输入"
-            />
+            <input type="text" v-model="submitData.warrantySpan" name="" id="" class="inp" placeholder="请输入" />
           </li>
           <li>
             <div class="label">质保到期日</div>
             <div class="datePick">
-              <el-date-picker
-                v-model="submitData.warrantyDate"
-                type="datetime"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期时间"
-              >
+              <el-date-picker v-model="submitData.warrantyDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期时间">
               </el-date-picker>
             </div>
           </li>
@@ -220,7 +145,7 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
 
@@ -257,7 +182,25 @@ export default {
     this.getProvincesList();
   },
 
+  watch: {
+    // 监听出厂日期和质保到期日的变化
+    "submitData.factoryDate": "calculateWarrantySpan",
+    "submitData.warrantyDate": "calculateWarrantySpan",
+  },
+
   methods: {
+    calculateWarrantySpan() {
+      const { factoryDate, warrantyDate } = this.submitData;
+      if (factoryDate && warrantyDate) {
+        const startDate = new Date(factoryDate);
+        const endDate = new Date(warrantyDate);
+        const diffMonths =
+          (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+          (endDate.getMonth() - startDate.getMonth());
+        this.submitData.warrantySpan = diffMonths > 0 ? diffMonths : 0; // 确保不为负数
+      }
+    },
+
     doSubmit(idx) {
       if (idx == 2) {
         let check = false;
@@ -440,8 +383,7 @@ export default {
               .el-input__wrapper {
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
-                  no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;

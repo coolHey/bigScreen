@@ -9,6 +9,10 @@ export const getListData = (id, params) => {
 export const getAutoData = (params, query) => {
   return request.get("/data/autoData/" + params.id, { params: query });
 };
+// 点击折线图获取右边数据
+export const getLineOne = (params, query) => {
+  return request.get("/data/lineOne/" + params.id, { params: query });
+};
 
 export const getCompareData = (data) => {
   return request.post("/data/compareData", data);

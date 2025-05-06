@@ -12,6 +12,7 @@
               name=""
               id=""
               class="inp"
+              disabled
               placeholder="请输入"
             />
           </li>
@@ -65,7 +66,7 @@ export default {
   data() {
     return {
       submitData: {
-        monitorId: "", // 设备id
+        monitorId: this.$route.query.monitorId, // 设备id
         repairer: "", // 维修人员
         soldTime: "", // 维修时间
         contactPhone: "", // 维修内容
@@ -222,6 +223,7 @@ export default {
         color: #fff;
         letter-spacing: vw(1);
         font-style: normal;
+        cursor: pointer;
 
         &:nth-of-type(1) {
           background: url(../../assets/image/cancel_bg.png) top left no-repeat;

@@ -41,8 +41,8 @@
         >
           <template #default="scope">
             <div @click="getCurrentScope(scope)">
-              <span>{{ scope.row.errorTime }}</span>
-              <span class="warning"> 需要维保，请及时处理</span>
+              <span>{{ scope.row.monitorId  }}</span>
+              <!-- <span class="warning"> 需要维保，请及时处理</span> -->
             </div>
           </template>
         </el-table-column>

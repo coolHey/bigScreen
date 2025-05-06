@@ -26,11 +26,12 @@
 
 <script>
 import * as echarts from "echarts";
+import { getLineOne } from "@/api/runningData";
 export default {
   props: {
     data: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   data() {
@@ -78,6 +79,11 @@ export default {
             color: "#D1DFE9",
           },
         },
+        dataZoom: [{
+          type: 'inside', // 使用内置组件的数据窗口缩放，关闭全局缩放功能
+          start: 0,
+          end: 100
+        }],
         grid: {
           left: "3%",
           right: "4%",
@@ -118,19 +124,26 @@ export default {
           },
         ],
       };
-      // if (flag == 1) {
-      //   this.myChart1 = echarts.init(this.$refs.chart1);
-      //   this.myChart1.setOption(option);
-      // } else {
-      //   this.myChart2 = echarts.init(this.$refs.chart2);
-      //   this.myChart2.setOption(option);
-      // }
       const chart = echarts.init(this.$refs[`chart${flag}`]);
       chart.setOption(option);
       this[`myChart${flag}`] = chart;
-      // window.addEventListener('resize', () => {
-      //   this.myChart.resize()
-      // })
+      const _this = this;
+      chart.on('click', function (params) {
+        let p = {
+          type: 'centrifuge',
+          id: '',
+        }
+        p.id = (data?.[0] || [])[params.dataIndex]?.id;
+        if (p.id) {
+          getLineOne({id: p.id}, {type: p.type}).then((res) => {
+            if (res.code == 200) {
+              console.log(res);
+              _this.$emit('getRightData', res.data);
+            }
+            console.log(res);
+          })
+        }
+      })
     },
   },
 };
