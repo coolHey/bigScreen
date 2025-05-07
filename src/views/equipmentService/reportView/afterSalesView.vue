@@ -4,21 +4,11 @@
       <ul>
         <li>
           <span class="label">设备ID：</span>
-          <input
-            type="text"
-            placeholder="请输入"
-            class="inp"
-            v-model="form.monitorId"
-          />
+          <input type="text" placeholder="请输入" class="inp" v-model="form.monitorId" />
         </li>
         <li>
           <span class="label">客户名称：</span>
-          <input
-            type="text"
-            placeholder="请输入"
-            class="inp"
-            v-model="form.clientName"
-          />
+          <input type="text" placeholder="请输入" class="inp" v-model="form.clientName" />
         </li>
         <li>
           <button class="btn" @click="doSearch">查询</button>
@@ -28,51 +18,30 @@
       <!-- <div class="addBtn">新增设备</div> -->
     </div>
     <div class="tableBox">
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column
-          prop="monitorId"
-          align="center"
-          label="设备ID"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="soldCount"
-          align="center"
-          label="维修次数"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="clientName"
-          align="center"
-          label="客户"
-          show-overflow-tooltip
-        ></el-table-column>
+      <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection"> </el-table-column>
+        <el-table-column type="index" align="center" label="序号" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="monitorId" align="center" label="设备ID" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="soldCount" align="center" label="维修次数" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="clientName" align="center" label="客户" show-overflow-tooltip></el-table-column>
         <el-table-column align="center" label="操作">
           <template #default="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small"
-              >详情
+            <el-button @click="handleClick(scope.row)" type="text" size="small">详情
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="paginationBox">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :total="total"
-        :current-page="pagination.pn"
-        :page-size="pagination.size"
-        background
-        layout="total, prev, pager, next"
-      >
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="total"
+        :current-page="pagination.pn" :page-size="pagination.size" background layout="total, prev, pager, next">
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import { getSoldPageData } from "@/api/afterSales";
+import { getSoldPageData, getSoldExport } from "@/api/afterSales";
 import { download } from "@/utils/download";
 import QueryString from "qs";
 
@@ -80,6 +49,7 @@ export default {
   data() {
     return {
       tableData: [],
+      multipleSelection: [],
       form: {
         monitorId: undefined,
         clientName: undefined,
@@ -105,16 +75,48 @@ export default {
         this.total = res.data.total;
       }
     },
+
+    // 绑定选择项
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+
     doSearch() {
       this.getData();
     },
     exportData() {
-      download(
-        "http://146.56.215.178:9999/msg/errorExport?" +
-          QueryString.stringify({
-            ids: JSON.stringify(this.tableData.map((item) => item.id)),
+      let ids = [];
+      this.multipleSelection.forEach((v) => {
+        console.log(v);
+        ids.push(v.id);
+      });
+      if (!ids.length) {
+        this.$message({
+          message: "请选择需要导出的数据",
+          type: "warning",
+        });
+        return;
+      }
+      getSoldExport({ ids: ids ? ids.join(",") : "" }).then((res) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(
+          new Blob([res], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8",
           })
-      );
+        );
+        link.download = "下载文件.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        console.log(res);
+      });
+      // download(
+      //   "http://146.56.215.178:9999/sold/soldExport?" +
+      //     QueryString.stringify({
+      //       ids: JSON.stringify(this.tableData.map((item) => item.id)),
+      //     })
+      // );
     },
     async handleClick(row) {
       this.$router.push({
@@ -143,14 +145,17 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: vh(20);
+
     ul {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+
       li {
         display: flex;
         align-items: center;
         margin-right: vw(32);
+
         .label {
           font-weight: 400;
           font-size: vw(16);
@@ -173,14 +178,17 @@ export default {
           font-style: normal;
           padding: vh(8) vh(12);
         }
+
         .datePick {
           width: vw(245);
           height: vh(38);
+
           :deep(.el-input) {
             width: 100%;
             height: 100%;
             border: none;
             background: rgba(0, 112, 255, 0.1);
+
             .el-input__wrapper {
               background: rgba(0, 112, 255, 0.1);
               box-shadow: inset 0px 0px vh(8) 0px rgba(0, 130, 255, 0.32);
@@ -194,21 +202,17 @@ export default {
             }
           }
         }
+
         .btn {
           width: vw(72);
           height: vh(38);
-          background: linear-gradient(
-            180deg,
-            rgba(1, 16, 42, 0.33) 0%,
-            #0a356d 100%
-          );
+          background: linear-gradient(180deg,
+              rgba(1, 16, 42, 0.33) 0%,
+              #0a356d 100%);
           border: 1px solid;
-          border-image: linear-gradient(
-              80deg,
+          border-image: linear-gradient(80deg,
               rgba(16, 35, 72, 1),
-              rgba(55, 104, 186, 1)
-            )
-            1 1;
+              rgba(55, 104, 186, 1)) 1 1;
           outline: none;
           font-weight: 400;
           font-size: vw(16);
@@ -221,6 +225,7 @@ export default {
         }
       }
     }
+
     .addBtn {
       background: url(../../../assets/image/add_bg.png) top left no-repeat;
       background-size: 100% auto;
@@ -234,30 +239,35 @@ export default {
       font-style: normal;
     }
   }
+
   .tableBox {
     width: 100%;
     height: vh(750);
+
     // margin-top: vh(22);
     :deep(.el-table) {
       background-color: transparent;
+
       .el-table__inner-wrapper {
         &::before {
           content: none;
         }
+
         .el-table__header {
           backdrop-filter: blur(2px);
+
           thead {
             tr {
-              background: linear-gradient(
-                270deg,
-                rgba(0, 113, 255, 0) 0%,
-                rgba(0, 145, 255, 0.2) 52%,
-                rgba(0, 109, 255, 0) 100%
-              );
+              background: linear-gradient(270deg,
+                  rgba(0, 113, 255, 0) 0%,
+                  rgba(0, 145, 255, 0.2) 52%,
+                  rgba(0, 109, 255, 0) 100%);
               backdrop-filter: blur(2px);
+
               th {
                 background: transparent;
                 border: none;
+
                 .cell {
                   background: transparent;
                   font-weight: 600;
@@ -273,35 +283,39 @@ export default {
             }
           }
         }
+
         .el-table__body-wrapper {
           margin-top: vh(12);
           background: transparent;
+
           .el-table__body {
             background-color: transparent;
+
             tbody {
               overflow: hidden;
+
               .el-table__row {
                 &:nth-child(odd) {
-                  background: linear-gradient(
-                    270deg,
-                    rgba(0, 113, 255, 0) 0%,
-                    rgba(33, 55, 89, 0.2) 52%,
-                    rgba(0, 109, 255, 0) 100%
-                  );
+                  background: linear-gradient(270deg,
+                      rgba(0, 113, 255, 0) 0%,
+                      rgba(33, 55, 89, 0.2) 52%,
+                      rgba(0, 109, 255, 0) 100%);
                 }
+
                 &:nth-child(even) {
-                  background: linear-gradient(
-                    270deg,
-                    rgba(0, 113, 255, 0) 0%,
-                    rgba(12, 72, 162, 0.2) 52%,
-                    rgba(0, 109, 255, 0) 100%
-                  );
+                  background: linear-gradient(270deg,
+                      rgba(0, 113, 255, 0) 0%,
+                      rgba(12, 72, 162, 0.2) 52%,
+                      rgba(0, 109, 255, 0) 100%);
                 }
+
                 backdrop-filter: blur(2px);
                 margin-bottom: vh(8);
+
                 td {
                   background: transparent;
                   border: none;
+
                   .cell {
                     min-height: vh(60);
                     font-weight: 400;
@@ -318,10 +332,12 @@ export default {
       }
     }
   }
+
   .paginationBox {
     margin-top: vh(32);
     display: flex;
     justify-content: flex-end;
+
     :deep(.el-pagination) {
       .el-pagination__total {
         font-weight: 600;
@@ -329,10 +345,12 @@ export default {
         color: #90b9ff;
         font-style: normal;
       }
+
       .btn-prev {
         width: vw(32);
         height: vh(32);
         background: rgba(0, 93, 196, 0.2);
+
         &::before {
           content: "";
           background: url(../../../assets/image/prev.png) top left no-repeat;
@@ -340,14 +358,17 @@ export default {
           width: vw(10);
           height: vh(10);
         }
+
         .el-icon {
           display: none;
         }
       }
+
       .btn-next {
         width: vw(32);
         height: vh(32);
         background: rgba(0, 93, 196, 0.2);
+
         &::before {
           content: "";
           background: url(../../../assets/image/next.png) top left no-repeat;
@@ -355,10 +376,12 @@ export default {
           width: vw(10);
           height: vh(10);
         }
+
         .el-icon {
           display: none;
         }
       }
+
       .el-pager {
         li {
           width: vw(32);
@@ -368,21 +391,17 @@ export default {
           font-size: vw(14);
           color: #fff;
           font-style: normal;
+
           &.is-active {
-            background: linear-gradient(
-              270deg,
-              rgba(0, 105, 255, 0) 0%,
-              rgba(62, 135, 255, 0.43) 100%
-            );
+            background: linear-gradient(270deg,
+                rgba(0, 105, 255, 0) 0%,
+                rgba(62, 135, 255, 0.43) 100%);
             border: 1px solid;
-            border-image: linear-gradient(
-                136deg,
+            border-image: linear-gradient(136deg,
                 rgba(183, 217, 255, 1),
                 rgba(53, 149, 255, 1),
                 rgba(145, 198, 255, 1),
-                rgba(0, 118, 246, 1)
-              )
-              1 1;
+                rgba(0, 118, 246, 1)) 1 1;
           }
         }
       }

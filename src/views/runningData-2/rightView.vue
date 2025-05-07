@@ -7,15 +7,15 @@
     <div class="content3 content">
       <ul>
         <li>
-          <span>运行速度</span>
+          <span>运行模式</span>
           <span>{{ data.c1 || "-" }}</span>
         </li>
         <li>
-          <span>真空度</span>
+          <span>运行速度</span>
           <span>{{ data.c2 || "-" }}</span>
         </li>
         <li>
-          <span>压力</span>
+          <span>主机频率</span>
           <span>{{ data.c3 || "-" }}</span>
         </li>
       </ul>
@@ -23,11 +23,11 @@
     <div class="content2 content">
       <ul>
         <li>
-          <span>震动/流量</span>
+          <span>主机电流</span>
           <span>{{ data.c4 || "-" }}</span>
         </li>
         <li>
-          <span>热源温度</span>
+          <span>含氧量</span>
           <span>{{ data.c5 || "-" }}</span>
         </li>
       </ul>
@@ -35,15 +35,15 @@
     <div class="content3 content">
       <ul>
         <li>
-          <span>输出电压</span>
+          <span>振动值</span>
           <span>{{ data.c6 || "-" }}</span>
         </li>
         <li>
-          <span>输出电流</span>
+          <span>主机转速</span>
           <span>{{ data.c7 || "-" }}</span>
         </li>
         <li>
-          <span>腔体温度</span>
+          <span>布料频率</span>
           <span>{{ data.frequency || "-" }}</span>
         </li>
       </ul>
@@ -51,11 +51,11 @@
     <div class="content2 content">
       <ul>
         <li>
-          <span>真空上料</span>
+          <span>布料电流</span>
           <span>{{ data.electricity || "-" }}</span>
         </li>
         <li>
-          <span>螺旋输送</span>
+          <span>布料振动值</span>
           <span>{{ data.vibration || "-" }}</span>
         </li>
       </ul>

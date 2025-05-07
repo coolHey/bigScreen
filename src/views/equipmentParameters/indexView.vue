@@ -9,44 +9,20 @@
             <li>
               <div class="label">时间范围：</div>
               <div class="datePick">
-                <el-date-picker
-                  v-model="item.time"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  type="datetimerange"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  :default-time="defaultTime1"
-                  time-format="HH:mm"
-                >
+                <el-date-picker v-model="item.time" value-format="YYYY-MM-DD HH:mm:ss" type="datetimerange"
+                  start-placeholder="开始日期" end-placeholder="结束日期" :default-time="defaultTime1" time-format="HH:mm">
                 </el-date-picker>
               </div>
             </li>
             <li>
               <div class="label">设备ID：</div>
-              <input
-                type="text"
-                name=""
-                id=""
-                class="inp"
-                placeholder="请输入"
-                v-model="item.monitorId"
-              />
+              <input type="text" name="" id="" class="inp" placeholder="请输入" v-model="item.monitorId" />
             </li>
             <li>
               <div class="label">选择参数：</div>
               <div class="elSelect">
-                <el-select
-                  v-model="item.keyWords"
-                  multiple
-                  collapse-tags
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
+                <el-select v-model="item.keyWords" multiple collapse-tags placeholder="请选择">
+                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </div>
@@ -86,84 +62,16 @@ export default {
     return {
       options: [
         {
-          value: "c1",
-          label: "离心机-运行模式",
+          value: "frequency",
+          label: "频率",
         },
         {
-          value: "c2",
-          label: "离心机-运行速度",
+          value: "electricity",
+          label: "电流",
         },
         {
-          value: "c3",
-          label: "离心机-运行频率",
-        },
-        {
-          value: "c4",
-          label: "离心机-氮气",
-        },
-        {
-          value: "c5",
-          label: "离心机-输出电压",
-        },
-        {
-          value: "c6",
-          label: "离心机-输出电流",
-        },
-        {
-          value: "c7",
-          label: "离心机-输出功率",
-        },
-        {
-          value: "c8",
-          label: "离心机-震动值",
-        },
-        {
-          value: "c9",
-          label: "离心机-真空上料",
-        },
-        {
-          value: "c10",
-          label: "离心机-螺旋输送",
-        },
-        {
-          value: "k1",
-          label: "干燥机-运行速度",
-        },
-        {
-          value: "k2",
-          label: "干燥机-真空度",
-        },
-        {
-          value: "k3",
-          label: "干燥机-压力",
-        },
-        {
-          value: "k4",
-          label: "干燥机-振动/流量",
-        },
-        {
-          value: "k5",
-          label: "干燥机-输出电压",
-        },
-        {
-          value: "k6",
-          label: "干燥机-输出电流",
-        },
-        {
-          value: "k7",
-          label: "干燥机-腔体温度",
-        },
-        {
-          value: "k8",
-          label: "干燥机-热源温泉",
-        },
-        {
-          value: "k9",
-          label: "干燥机-真空上料",
-        },
-        {
-          value: "k10",
-          label: "干燥机-螺旋输送",
+          value: "vibration",
+          label: "震动",
         },
       ],
       value1: [],
@@ -209,25 +117,25 @@ export default {
       getCompareData(filterData).then((res) => {
         console.log(res);
       });
-      // // let options = {
-      // //   nameData: [],
-      // //   series: [],
-      // // };
-      // // this.filterList.forEach((v, idx) => {
-      // //   options.nameData.push(idx);
-      // //   let data = [820, 932, 901, 934, 1290, 1330, 1320];
-      // //   let item = {
-      // //     name: "Email",
-      // //     data: [],
-      // //     type: "line",
-      // //     smooth: true,
-      // //     symbol: "none",
-      // //   };
-      // //   data.forEach((k) => {
-      // //     item.data.push(this.getRandomNumberUnderOneThousand());
-      // //   });
-      // //   options.series.push(item);
-      // });
+      let options = {
+        nameData: [],
+        series: [],
+      };
+      this.filterList.forEach((v, idx) => {
+        options.nameData.push(idx);
+        let data = [820, 932, 901, 934, 1290, 1330, 1320];
+        let item = {
+          name: "Email",
+          data: [],
+          type: "line",
+          smooth: true,
+          symbol: "none",
+        };
+        data.forEach((k) => {
+          item.data.push(this.getRandomNumberUnderOneThousand());
+        });
+        options.series.push(item);
+      });
       // console.log(options);
       // this.myChart = null;
       // this.initChart(options);
@@ -345,8 +253,7 @@ export default {
   }
 
   .main {
-    background: url(../../assets/image/equipmentParameters_bg.png) top left
-      no-repeat;
+    background: url(../../assets/image/equipmentParameters_bg.png) top left no-repeat;
     background-size: 100% 100%;
     width: vw(1390);
     height: vh(840);
@@ -391,8 +298,7 @@ export default {
               :deep(.el-select) {
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
-                  no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;
@@ -416,8 +322,7 @@ export default {
                 background: transparent;
                 width: 100%;
                 height: 100%;
-                background: url(../../assets/image/inp_bg.png) top left
-                  no-repeat;
+                background: url(../../assets/image/inp_bg.png) top left no-repeat;
                 background-size: 100% 100%;
                 border: none;
                 box-shadow: none;
@@ -430,8 +335,7 @@ export default {
                 .el-input__wrapper {
                   // width: 100%;
                   // height: 100%;
-                  background: url(../../assets/image/inp_bg.png) top left
-                    no-repeat;
+                  background: url(../../assets/image/inp_bg.png) top left no-repeat;
                   background-size: 100% 100%;
                   border: none;
                   box-shadow: none;
@@ -455,8 +359,7 @@ export default {
             }
 
             &.delete {
-              background: url(../../assets/image/delete_bg.png) top left
-                no-repeat;
+              background: url(../../assets/image/delete_bg.png) top left no-repeat;
               background-size: 100% 100%;
               width: vw(40);
               height: vh(40);

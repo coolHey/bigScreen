@@ -60,7 +60,24 @@ export default {
     console.log(this.updateData);
     this.submitData = Object.assign(this.submitData, this.updateData)
   },
+  watch: {
+    // 监听出厂日期和质保到期日的变化
+    "submitData.factoryDate": "calculateWarrantySpan",
+    "submitData.warrantyDate": "calculateWarrantySpan",
+  },
   methods: {
+    calculateWarrantySpan() {
+      const { factoryDate, warrantyDate } = this.submitData;
+      if (factoryDate && warrantyDate) {
+        const startDate = new Date(factoryDate);
+        const endDate = new Date(warrantyDate);
+        const diffMonths =
+          (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+          (endDate.getMonth() - startDate.getMonth());
+        this.submitData.warrantySpan = diffMonths > 0 ? diffMonths : 0; // 确保不为负数
+      }
+    },
+
     doSubmit(idx) {
       if (idx == 1) {
         this.$emit("doSubmit", idx);

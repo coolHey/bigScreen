@@ -64,8 +64,6 @@ export default {
   },
   methods: {
     getRightData(data) {
-      console.log(1233);
-      
       this.currentData = data;
     },
 

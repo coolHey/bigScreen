@@ -27,6 +27,9 @@ import request from '@/api/request'
  */
  export function tansParams(params) {
   let result = ''
+  if (!params) {
+    return result
+  }
   const ERROR = [null, undefined, 'undefined', '', 'null']
   for (const propName of Object.keys(params)) {
     const value = params[propName]
@@ -52,7 +55,7 @@ import request from '@/api/request'
 // 通用下载方法
 export function download(url, params, filename) {
   //弹出消息框
-    return request.post(url, params, {
+    return request.get(url, params, {
       transformRequest: [(params) => {
         return tansParams(params)
       }],

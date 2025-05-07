@@ -46,3 +46,31 @@ export const getErrorPageData = (params) => {
 export const postFaultUpdate = (data) => {
   return request.post("/fault/faultUpdate", data);
 };
+
+
+// 导出故障
+export const getFaultExport = (params) => {
+  return request.get("/fault/faultExport", {
+    params,
+    responseType: "blob",
+    responseEncoding: "utf8",
+  });
+};
+
+// 导出维保
+export const getMaintainExport = (params) => {
+  return request.get("/maintain/maintainExport", {
+    params,
+    responseType: "blob",
+    responseEncoding: "utf8",
+  });
+};
+
+// 导出售后次数
+export const getSoldExport = (params) => {
+  return request.get("/sold/soldExport", {
+    params,
+    responseType: "blob",
+    responseEncoding: "utf8",
+  });
+};
